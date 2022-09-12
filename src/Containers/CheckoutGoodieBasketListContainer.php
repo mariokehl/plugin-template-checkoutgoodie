@@ -2,13 +2,12 @@
 
 namespace CheckoutGoodie\Containers;
 
-use Ceres\Config\CeresConfig;
 use Plenty\Plugin\Templates\Twig;
 
 /**
  * @package CheckoutGoodie\Containers
  */
-class CheckoutGoodieSingleItemContainer
+class CheckoutGoodieBasketListContainer
 {
     /**
      * Renders the template.

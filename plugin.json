@@ -10,10 +10,16 @@
     "serviceProvider": "CheckoutGoodie\\Providers\\CheckoutGoodieServiceProvider",
     "dataProviders": [
         {
-            "key": "CheckoutGoodie\\Containers\\CheckoutGoodieSingleItemProvider",
-            "name": "Anzeige Gratisbeigabe",
+            "key": "CheckoutGoodie\\Containers\\CheckoutGoodieBasketListContainer",
+            "name": "Display goodie after basket list",
             "description": "",
-            "defaultLayoutContainer": "Ceres::Template.AfterScriptsLoaded"
+            "defaultLayoutContainer": "Ceres::Checkout.AfterScriptsLoaded"
+        },
+        {
+            "key": "CheckoutGoodie\\Containers\\CheckoutGoodieProgressBarContainer",
+            "name": "Display progress bar to reach goodie",
+            "description": "",
+            "defaultLayoutContainer": "Ceres::BasketPreview.BeforeBasketTotals"
         }
     ]
 }

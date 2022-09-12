@@ -1,0 +1,30 @@
+<div id="checkout-goodie-progress" class="mb-4">
+    <div class="text-center">
+        Noch <span id="missing-goodie-amount">4,00</span> EUR bis zur Gratisbeigabe
+    </div>
+    <div class="progress mt-2">
+        <div role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" class="progress-bar progress-bar-striped bg-success" style="width: 0%;"></div>
+    </div>
+</div>
+
+<script>
+    document.addEventListener("afterBasketChanged", (e) => {
+        const basket = e.detail;
+        const itemSum = basket.itemSum;
+        const currency = basket.currency;
+
+        const amount = 4 - itemSum;
+
+        const label = document.getElementById('missing-goodie-amount');
+        label.innerHTML = Intl.NumberFormat('de-DE').format(amount < 0 ? 0 : amount);
+
+        let pr = (itemSum / 4) * 100;
+        pr = ("" + pr).substr(0, ("" + pr).indexOf(".") + 3);
+        pr = pr > 100 ? 100 : pr;
+        console.log(pr);
+
+        const progress = document.querySelectorAll('[role="progressbar"]')[0];
+        progress.setAttribute('aria-valuenow', pr);
+        progress.style['width'] = pr + '%';
+    }, false)
+</script>
