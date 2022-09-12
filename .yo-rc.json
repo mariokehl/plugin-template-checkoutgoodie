@@ -1,0 +1,14 @@
+{
+  "@plentymarkets/generator-plugin": {
+    "promptValues": {
+      "type": "general"
+    },
+    "answers": {
+      "name": "CheckoutGoodie",
+      "author": "Bureau Mario Kehl",
+      "type": "general",
+      "description": "Lorem ipsum",
+      "version": "0.0.1"
+    }
+  }
+}

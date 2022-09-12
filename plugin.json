@@ -1,0 +1,19 @@
+{
+    "name": "CheckoutGoodie",
+    "namespace": "CheckoutGoodie",
+    "type": "template",
+    "version": "0.0.1",
+    "pluginIcon": "icon_plugin_xs.png",
+    "description": "Lorem ipsum",
+    "author": "Bureau Mario Kehl",
+    "authorIcon": "icon_author_xs.png",
+    "serviceProvider": "CheckoutGoodie\\Providers\\CheckoutGoodieServiceProvider",
+    "dataProviders": [
+        {
+            "key": "CheckoutGoodie\\Containers\\CheckoutGoodieSingleItemProvider",
+            "name": "Anzeige Gratisbeigabe",
+            "description": "",
+            "defaultLayoutContainer": "Ceres::Template.AfterScriptsLoaded"
+        }
+    ]
+}

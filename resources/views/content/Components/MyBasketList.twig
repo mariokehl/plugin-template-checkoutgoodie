@@ -1,0 +1,62 @@
+<script type="x/template" data-component="basket-list">
+    <div>
+        <div>
+            <div v-if="!basketItems.length > 0">
+                <div class="h5 py-3">{{ trans("Ceres::Template.basketNoItems") }}</div>
+            </div>
+            <transition-group name="list-transition" tag="div">
+                <template v-for="basketItem in basketItems">
+                    <basket-list-item
+                        :key="basketItem.id"
+                        :basket-item="basketItem"
+                        :is-preview="isPreview"
+                        :basket-details-data="basketDetailsData"
+                    >
+                        <template #before-basket-item>
+                            <slot name="before-basket-item"></slot>
+                        </template>
+                        <template #after-basket-item>
+                            <slot name="after-basket-item"></slot>
+                        </template>
+                    </basket-list-item>
+                </template>
+            </transition-group>
+            <!-- START: CheckoutGoodie Plugin -->
+            <div v-if="$store.state.basket.data.itemSum > 4">
+                <hr class="m-0">
+                <div id="checkout-goodie" class="basket-list-item py-3">
+                    <div class="basket-item component-loading with-icon d-flex">
+                        <div class="image-container">
+                            <img src="https://dummyimage.com/150x150/000/fff" alt="Barhocker White SanFrancisco" title="Barhocker White SanFrancisco" class="d-block mw-100 mh-100">
+                        </div>
+                        <div class="meta-container-wrapper">
+                            <div class="meta-container-wrapper-inner">
+                                <div class="meta-container">
+                                    <div class="position-relative w-100">
+                                        <a href="javascript:;" class="item-name text-primary text-appearance small font-weight-bold text-break">Lorem ipsum</a>
+                                    </div>
+                                </div>
+                                <div class="basket-item-container-right">
+                                    <div class="qty-box-container">
+                                        <div class="qty-box d-flex h-100">
+                                            <input type="text" value="1" aria-label="Mengeneingabe" class="qty-input text-center" disabled="disabled">
+                                            <div class="qty-btn-container d-flex flex-column">
+                                                <button data-toggle="tooltip" data-placement="top" data-testing="quantity-btn-increase" title="" aria-label="Menge erhöhen" class="btn qty-btn flex-fill d-flex justify-content-center p-0" data-original-title="Maximale Bestellmenge: " disabled="disabled"><i aria-hidden="true" class="fa fa-plus default-float"></i></button>
+                                                <button data-toggle="tooltip" data-placement="bottom" data-testing="quantity-btn-decrease" title="" aria-label="Menge verringern" class="btn qty-btn flex-fill d-flex justify-content-center p-0" data-original-title="Minimale Bestellmenge: 1" disabled="disabled"><i aria-hidden="true" class="fa fa-minus default-float"></i></button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="price-box text-right ml-2 mt-1">
+                                        <span class="badge bg-success">Kostenlos</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- END: CheckoutGoodie Plugin -->
+        </div>
+        <loading-animation v-if="!isBasketInitiallyLoaded" class="d-table w-100"></loading-animation>
+    </div>
+</script>
