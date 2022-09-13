@@ -1,5 +1,5 @@
-<div id="checkout-goodie-progress" class="mb-4">
-    <div id="missing-goodie-amount" class="text-center">
+<div class="mb-4">
+    <div class="missing-goodie-amount text-center">
         {% if percentage == 100 %}<i class="fa fa-check"></i>&nbsp;{% endif %}{{ label }}
     </div>
     <div class="progress mt-2">
@@ -10,7 +10,7 @@
 <script id="checkout-goodie-config" type="application/json">
     {
         "initialData": {
-            "amount": {{ currAmount }},
+            "amount": {{ itemSum }},
             "percentage": {{ percentage }}
         },
         "grossValue": {{ grossValue }},
@@ -48,7 +48,7 @@
         this.getMissingMessage = function (amount) {
             const config = this.getConfig();
             let msg = config.messages.missing;
-            msg = msg.replace(':amount', Intl.NumberFormat('de-DE').format(amount));
+            msg = msg.replace(':amount', Intl.NumberFormat('de-DE', { maximumFractionDigits: 2, minimumFractionDigits: 2 }).format(amount));
             msg = msg.replace(':currency', config.currency);
             return msg;
         },
@@ -73,11 +73,14 @@
             return output;
         },
         this.setLabel = function () {
-            const div = document.getElementById('missing-goodie-amount');
-            if (!div) {
+            const els = document.getElementsByClassName('missing-goodie-amount');
+            if (!els.length) {
                 return;
             } else {
-                div.innerHTML = this.calc();
+                const self = this;
+                Array.prototype.forEach.call(els, function (el) {
+                    el.innerHTML = self.calc();
+                });
             }
         }
     }
@@ -92,7 +95,7 @@
     document.addEventListener('afterBasketChanged', (e) => {
         const basket = e.detail;
         const itemSum = basket.itemSum;
-        let goodie = new CheckoutGoodie(itemSum);
+        const goodie = new CheckoutGoodie(itemSum);
         goodie.setLabel();
     }, false);
 </script>

@@ -63,7 +63,7 @@ class CheckoutGoodieProgressBarContainer
 
         return $twig->render('CheckoutGoodie::content.Containers.ProgressBar', [
             'grossValue' => $minimumGrossValue,
-            'currAmount' => $currAmount,
+            'itemSum'    => $basket->itemSum ?? 0,
             'label'      => $label,
             'percentage' => $percentage,
             'width'      => 'width: ' . number_format($percentage, 0, '', '') . '%',
