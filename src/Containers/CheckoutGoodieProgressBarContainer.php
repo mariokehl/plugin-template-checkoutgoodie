@@ -62,10 +62,12 @@ class CheckoutGoodieProgressBarContainer
         // The messages
         $messages = $this->getMessageTemplates();
         $label = '';
-        if ($percentage === 100) {
-            $label = $messages['goal'];
-        } else {
+        if ($percentage < 100) {
             $label = $this->getMessageTemplates(number_format($currAmount, 2, ',', ''), $currency)['missing'];
+            $this->getLogger(__METHOD__)->debug('CheckoutGoodie::Frontend.ProgressText', ['label' => $label, 'percentageLower' => true]);
+        } else {
+            $label = $messages['goal'];
+            $this->getLogger(__METHOD__)->debug('CheckoutGoodie::Frontend.ProgressText', ['label' => $label]);
         }
 
         return $twig->render('CheckoutGoodie::content.Containers.ProgressBar', [
