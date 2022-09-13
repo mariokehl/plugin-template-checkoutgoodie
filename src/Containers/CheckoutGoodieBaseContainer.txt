@@ -1,0 +1,63 @@
+<?php
+
+namespace CheckoutGoodie\Containers;
+
+use Plenty\Modules\Basket\Contracts\BasketRepositoryContract;
+use Plenty\Plugin\ConfigRepository;
+
+/**
+ * @package CheckoutGoodie\Containers
+ */
+class CheckoutGoodieBaseContainer
+{
+    /**
+     * Goodie constants
+     */
+    const MINIMUM_GROSS_VALUE = 50;
+
+    /**
+     * @var BasketRepositoryContract
+     */
+    protected $basketRepo = null;
+
+    /**
+     * @var ConfigRepository $config
+     */
+    protected $config = null;
+
+    /**
+     * CheckoutGoodieBaseContainer constructor.
+     *
+     * @param BasketRepositoryContract $basket
+     * @param ConfigRepository $config
+     */
+    public function __construct(
+        BasketRepositoryContract $basketRepo,
+        ConfigRepository $config
+    ) {
+        $this->basketRepo = $basketRepo;
+        $this->config = $config;
+    }
+
+    /**
+     * @return integer
+     */
+    protected function getMinimumGrossValue(): int
+    {
+        $grossValue = $this->config->get('CheckoutGoodie.global.grossValue', self::MINIMUM_GROSS_VALUE);
+        $grossValue = intval($grossValue);
+
+        return $grossValue;
+    }
+
+    /**
+     * @return integer
+     */
+    protected function getVariantId(): int
+    {
+        $variantId = $this->config->get('CheckoutGoodie.global.variantId', 0);
+        $variantId = intval($variantId);
+
+        return $variantId;
+    }
+}

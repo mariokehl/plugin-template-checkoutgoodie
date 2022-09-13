@@ -13,7 +13,7 @@
             "key": "CheckoutGoodie\\Containers\\CheckoutGoodieBasketListContainer",
             "name": "Display goodie after basket list",
             "description": "",
-            "defaultLayoutContainer": "Ceres::Checkout.AfterScriptsLoaded"
+            "defaultLayoutContainer": "Ceres::Script.AfterScriptsLoaded"
         },
         {
             "key": "CheckoutGoodie\\Containers\\CheckoutGoodieProgressBarContainer",

@@ -20,6 +20,6 @@ class CheckoutGoodieBasketListContainer
      */
     public function call(Twig $twig): string
     {
-        return $twig->render('CheckoutGoodie::content.Components.MyBasketList');
+        return $twig->render('CheckoutGoodie::content.Components.MyBasketList', ['grossValue' => 50]);
     }
 }
