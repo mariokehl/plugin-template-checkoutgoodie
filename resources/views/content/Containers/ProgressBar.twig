@@ -63,7 +63,7 @@
             }
 
             let pr = (this.getItemSum() / this.getGrossValue()) * 100;
-            pr = Math.round(pr);
+            pr = Math.floor(pr);
             pr = (pr > 100) ? 100 : pr;
 
             const progress = document.querySelectorAll('[role="progressbar"]')[0];

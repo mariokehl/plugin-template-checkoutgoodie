@@ -5,6 +5,7 @@ namespace CheckoutGoodie\Containers;
 use Plenty\Modules\Basket\Contracts\BasketRepositoryContract;
 use Plenty\Modules\Basket\Models\Basket;
 use Plenty\Plugin\ConfigRepository;
+use Plenty\Plugin\Log\Loggable;
 use Plenty\Plugin\Templates\Twig;
 use Plenty\Plugin\Translation\Translator;
 
@@ -13,6 +14,8 @@ use Plenty\Plugin\Translation\Translator;
  */
 class CheckoutGoodieProgressBarContainer
 {
+    use Loggable;
+
     /**
      * Renders the template.
      * 
@@ -44,9 +47,13 @@ class CheckoutGoodieProgressBarContainer
 
         if ($basket && $basket instanceof Basket) {
             $currAmount = ($minimumGrossValue - $basket->itemSum);
+            $this->getLogger(__METHOD__)->debug('CheckoutGoodie::Plenty.Basket', ['basket' => $basket]);
             $percentage = ($basket->itemSum / $minimumGrossValue) * 100;
-            $percentage = round($percentage);
+            $this->getLogger(__METHOD__)->debug('CheckoutGoodie::Frontend.Percentage', ['percentage' => $percentage]);
+            $percentage = floor($percentage);
+            $this->getLogger(__METHOD__)->debug('CheckoutGoodie::Frontend.Percentage', ['percentage' => $percentage]);
             $percentage = ($percentage > 100) ? 100 : $percentage;
+            $this->getLogger(__METHOD__)->debug('CheckoutGoodie::Frontend.Percentage', ['percentage' => $percentage]);
         }
 
         // The currency
