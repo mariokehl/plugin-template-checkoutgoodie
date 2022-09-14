@@ -1,1 +1,26 @@
-[]
+{
+    "formatVersion": 1,
+    "menu": {
+      "global": {
+        "label": "Config.Global",
+        "formFields": {
+          "global.grossValue": {
+            "type": "inputText",
+            "required": true,
+            "label": "Config.GlobalGoodsValueGross",
+            "options": {
+              "defaultValue": "50"
+            }
+          },
+          "global.variantId": {
+            "type": "inputText",
+            "required": true,
+            "label": "Config.GlobalVariantID",
+            "options": {
+              "defaultValue": ""
+            }
+          }
+        }
+      }
+    }
+  }

@@ -1,0 +1,26 @@
+<div class="mb-4">
+    <div class="missing-goodie-amount text-center">
+        {% if percentage == 100 %}<i class="fa fa-check"></i>&nbsp;{% endif %}{{ label }}
+    </div>
+    <div class="progress mt-2">
+        <div role="progressbar" aria-valuenow="{{ percentage }}" aria-valuemin="0" aria-valuemax="100" class="progress-bar progress-bar-striped bg-success" {% if width | length > 0 %} style="{{ width }}"{% endif %}></div>
+    </div>
+</div>
+
+<script id="checkout-goodie-config" type="application/json">
+    {
+        "initialData": {
+            "amount": {{ itemSum }},
+            "percentage": {{ percentage }}
+        },
+        "grossValue": {{ grossValue }},
+        "currency": "{{ currency }}",
+        "messages": {
+            "goal": "{{ messages.goal }}",
+            "missing": "{{ messages.missing }}"
+        },
+        "icons": {
+            "goal": "<i class=\"fa fa-check\"><\/i>"
+        }
+    }
+</script>

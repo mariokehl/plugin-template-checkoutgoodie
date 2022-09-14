@@ -1,0 +1,38 @@
+{
+    "marketplaceName": {
+        "de": "Gratiszugabe im Warenkorb anzeigen",
+        "en": "Show free goodie in shopping cart"
+    },
+    "license": "",
+    "price": 0,
+    "shortDescription": {
+        "de": "Mit Gratiszugaben höhere Umsätze generieren und diese im plentyShop sichtbar machen",
+        "en": "Generate higher sales with goodies and make them visible in the plentyShop"
+    },
+    "categories": [
+        "4090"
+    ],
+    "keywords": [
+        "plugin",
+        "integration",
+        "template"
+    ],
+    "subscription": [
+        {
+            "interval": "monthly",
+            "price": 10.00
+        },
+        {
+            "interval": "quarterly",
+            "price": 24.00
+        },
+        {
+            "interval": "half-yearly",
+            "price": 38.40
+        },
+        {
+            "interval": "yearly",
+            "price": 60.00
+        }
+    ]
+}

@@ -1,6 +1,6 @@
-# Release Notes für CheckoutGoodie
+# Versionshinweise für "Gratiszugabe im Warenkorb anzeigen"
 
-## v0.0.1
+## v1.0.0 (14.09.2022)
 
 ### Hinzugefügt
-[Weitere Informationen](https://developers.plentymarkets.com/marketplace/plugin-requirements#marketplace-changelog)
+- Erstveröffentlichung
