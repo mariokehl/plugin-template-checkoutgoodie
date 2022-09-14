@@ -2,6 +2,7 @@
 
 namespace CheckoutGoodie\Containers;
 
+use CheckoutGoodie\Helpers\SubscriptionInfoHelper;
 use Plenty\Modules\Item\Variation\Contracts\VariationRepositoryContract;
 use Plenty\Modules\Item\Variation\Models\Variation;
 use Plenty\Plugin\ConfigRepository;
@@ -26,6 +27,12 @@ class CheckoutGoodieBasketListContainer
      */
     public function call(Twig $twig): string
     {
+        /** @var SubscriptionInfoHelper $subscription */
+        $subscription = pluginApp(SubscriptionInfoHelper::class);
+        if (!$subscription->isPaid()) {
+            return '';
+        }
+
         /** @var ConfigRepository $configRepo */
         $configRepo = pluginApp(ConfigRepository::class);
 

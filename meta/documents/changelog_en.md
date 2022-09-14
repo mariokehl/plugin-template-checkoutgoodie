@@ -1,6 +1,6 @@
-# Release Notes for CheckoutGoodie
+# Release Notes for "Show free goodie in shopping cart"
 
-## v0.0.1
+## v1.0.0 (2022-09-14)
 
 ### Added
-[Further information](https://developers.plentymarkets.com/marketplace/plugin-requirements#marketplace-changelog)
+- Initial release

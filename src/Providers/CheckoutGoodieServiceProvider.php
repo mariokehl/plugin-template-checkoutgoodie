@@ -2,6 +2,7 @@
 
 namespace CheckoutGoodie\Providers;
 
+use CheckoutGoodie\Helpers\SubscriptionInfoHelper;
 use IO\Helper\ResourceContainer;
 use Plenty\Plugin\Events\Dispatcher;
 use Plenty\Plugin\ServiceProvider;
@@ -31,8 +32,12 @@ class CheckoutGoodieServiceProvider extends ServiceProvider
      */
     public function boot(Twig $twig, Dispatcher $eventDispatcher)
     {
-        $eventDispatcher->listen('IO.Resources.Import', function (ResourceContainer $container) {
-            $container->addScriptTemplate('CheckoutGoodie::content.Containers.Template.Script');
-        }, self::PRIORITY);
+        /** @var SubscriptionInfoHelper $subscription */
+        $subscription = pluginApp(SubscriptionInfoHelper::class);
+        if ($subscription->isPaid()) {
+            $eventDispatcher->listen('IO.Resources.Import', function (ResourceContainer $container) {
+                $container->addScriptTemplate('CheckoutGoodie::content.Containers.Template.Script');
+            }, self::PRIORITY);
+        }
     }
 }
