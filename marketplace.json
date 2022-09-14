@@ -19,6 +19,18 @@
     ],
     "subscription": [
         {
+            "interval": "monthly",
+            "price": 10.00
+        },
+        {
+            "interval": "quarterly",
+            "price": 24.00
+        },
+        {
+            "interval": "half-yearly",
+            "price": 38.40
+        },
+        {
             "interval": "yearly",
             "price": 60.00
         }
