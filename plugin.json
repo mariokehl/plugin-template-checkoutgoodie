@@ -16,10 +16,13 @@
         "de": "Mit Gratiszugaben höhere Umsätze generieren und diese im plentyShop sichtbar machen",
         "en": "Generate higher sales with goodies and make them visible in the plentyShop"
     },
+    "require": {
+        "Ceres": "~5.0.54"
+    },
     "platform": {
         "php": ">=7.3 <8.1"
     },
-    "isClosedSource": false,
+    "isClosedSource": true,
     "serviceProvider": "CheckoutGoodie\\Providers\\CheckoutGoodieServiceProvider",
     "dataProviders": [
         {
