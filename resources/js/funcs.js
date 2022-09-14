@@ -1,7 +1,7 @@
 /**
  * Main function to handle goodie goal
  * 
- * @param {integer} itemSum 
+ * @param {number|null} itemSum 
  */
 function CheckoutGoodie(itemSum) {
     this.itemSum = itemSum;
@@ -14,7 +14,7 @@ function CheckoutGoodie(itemSum) {
         return config.grossValue;
     },
     this.getItemSum = function () {
-        if (itemSum) return itemSum;
+        if (typeof this.itemSum === 'number') return this.itemSum;
         const config = this.getConfig();
         return config.initialData.amount;
     },
@@ -64,7 +64,7 @@ function CheckoutGoodie(itemSum) {
 
 // Initial setup in checkout view
 window.addEventListener('load', () => {
-    const goodie = new CheckoutGoodie();
+    const goodie = new CheckoutGoodie(null);
     goodie.setLabel();
 }, false);
 
