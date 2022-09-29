@@ -27,14 +27,17 @@ class CheckoutGoodieBasketListContainer
      */
     public function call(Twig $twig): string
     {
-        /** @var SubscriptionInfoHelper $subscription */
-        $subscription = pluginApp(SubscriptionInfoHelper::class);
-        if (!$subscription->isPaid()) {
-            return '';
-        }
-
         /** @var ConfigRepository $configRepo */
         $configRepo = pluginApp(ConfigRepository::class);
+
+        // Is output active in plugin config?
+        $shouldRender = $configRepo->get('CheckoutGoodie.global.active', 'true');
+
+        /** @var SubscriptionInfoHelper $subscription */
+        $subscription = pluginApp(SubscriptionInfoHelper::class);
+        if (!$subscription->isPaid() || $shouldRender === 'false') {
+            return '';
+        }
 
         /** @var VariationRepositoryContract $variationRepo */
         $variationRepo = pluginApp(VariationRepositoryContract::class);

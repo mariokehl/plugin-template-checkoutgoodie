@@ -4,6 +4,10 @@
       "global": {
         "label": "Config.Global",
         "formFields": {
+          "global.active": {
+            "type": "checkBox",
+            "label": "Config.GlobalActive"
+          },
           "global.grossValue": {
             "type": "inputText",
             "required": true,
