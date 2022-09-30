@@ -10,8 +10,16 @@ To display the free goodie, you must enter the appropriate values ​​in the p
 2. Select the desired plugin set.
 3. Click on **Show free goodie in shopping cart**.<br>→ A new view opens.
 4. Select the **Global** section from the list.
-5. Enter your desired goods value (gross) and the variant ID.
-6. **Save** the settings.
+5. Enter your desired _goods value (gross)_ and the _variant ID_.
+6. Check the **Active** checkbox to display the goodie
+7. **Save** the settings.
+
+<div class="alert alert-info" role="alert">
+    Make sure that the variant to be linked has a variant name and an image link.
+    Otherwise, your goodie will be given out with dummy values!
+</div>
+
+Note: Use the **Active** checkbox to temporarily turn off plugin output without changing container bindings or deactivating the plugin in the plugin set.
 
 Then create the container links so that the free goodie is also displayed in the shopping cart of your plentyShop:
 
@@ -20,6 +28,15 @@ Then create the container links so that the free goodie is also displayed in the
 3. Associate the **Display progress bar to reach goodie** content with the **Ceres::Basket.BeforeBasketTotals** container for display in the shopping cart
 4. Associate the **Display progress bar to reach goodie** content with the **Ceres::BasketPreview.BeforeBasketTotals** container for display in the shopping cart preview
 5. Associate the **Display progress bar to reach goodie** content with the **Ceres::Checkout.BeforeBasketTotals** container for display in the checkout
+
+### Customization
+
+| Setting                            | Description |
+|------------------------------------|---------------|
+| Message value of goods not reached | Text if the shopping cart value is not reached, the following placeholders are available: `:amount` for the missing amount and `:currency` for the currency. |
+| Message Goods value reached        | Text when the shopping cart value is reached, i.e. as soon as the free goodie is added |
+
+Tabelle 1: Configuration options customization
 
 ### Set up event procedure
 

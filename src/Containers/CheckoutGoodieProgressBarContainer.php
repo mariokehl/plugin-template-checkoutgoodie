@@ -18,6 +18,22 @@ class CheckoutGoodieProgressBarContainer
     use Loggable;
 
     /**
+     * The constants
+     */
+    const MESSAGE_TEMPLATE_MISSING = 'missing';
+    const MESSAGE_TEMPLATE_GOAL = 'goal';
+
+    /**
+     * Message templates (either default or individualized)
+     *
+     * @var array
+     */
+    private $messageTemplates = [
+        self::MESSAGE_TEMPLATE_MISSING => '',
+        self::MESSAGE_TEMPLATE_GOAL => ''
+    ];
+
+    /**
      * Renders the template.
      * 
      * @param Twig $twig The twig instance
@@ -28,14 +44,17 @@ class CheckoutGoodieProgressBarContainer
      */
     public function call(Twig $twig): string
     {
-        /** @var SubscriptionInfoHelper $subscription */
-        $subscription = pluginApp(SubscriptionInfoHelper::class);
-        if (!$subscription->isPaid()) {
-            return '';
-        }
-
         /** @var ConfigRepository $configRepo */
         $configRepo = pluginApp(ConfigRepository::class);
+
+        // Is output active in plugin config?
+        $shouldRender = $configRepo->get('CheckoutGoodie.global.active', 'true');
+
+        /** @var SubscriptionInfoHelper $subscription */
+        $subscription = pluginApp(SubscriptionInfoHelper::class);
+        if (!$subscription->isPaid() || $shouldRender === 'false') {
+            return '';
+        }
 
         // The amount to reach
         $minimumGrossValue = $configRepo->get('CheckoutGoodie.global.grossValue', 50);
@@ -48,7 +67,7 @@ class CheckoutGoodieProgressBarContainer
 
         /** @var BasketRepositoryContract $basketRepo */
         $basketRepo = pluginApp(BasketRepositoryContract::class);
- 
+
         /** @var Basket $basket */
         $basket = $basketRepo->load();
 
@@ -67,13 +86,14 @@ class CheckoutGoodieProgressBarContainer
         $currency = $basket->currency ?? 'EUR';
 
         // The messages
-        $messages = $this->getMessageTemplates();
+        $messages = $this->getMessageTemplates($configRepo);
+        $this->getLogger(__METHOD__)->debug('CheckoutGoodie::Plenty.MessageTemplates', ['messages' => $messages]);
         $label = '';
         if ($percentage < 100) {
-            $label = $this->getMessageTemplates(number_format($currAmount, 2, ',', ''), $currency)['missing'];
+            $label = $this->getMessageTemplates($configRepo, number_format($currAmount, 2, ',', ''), $currency)[self::MESSAGE_TEMPLATE_MISSING];
             $this->getLogger(__METHOD__)->debug('CheckoutGoodie::Frontend.ProgressText', ['label' => $label, 'percentageLower' => true]);
         } else {
-            $label = $messages['goal'];
+            $label = $messages[self::MESSAGE_TEMPLATE_GOAL];
             $this->getLogger(__METHOD__)->debug('CheckoutGoodie::Frontend.ProgressText', ['label' => $label]);
         }
 
@@ -88,24 +108,38 @@ class CheckoutGoodieProgressBarContainer
         ]);
     }
 
-     /**
-      * @param string $amount
-      * @param string $currency
-      * @return array
-      */
-    private function getMessageTemplates(string $amount = '', string $currency = ''): array
+    /**
+     * @param ConfigRepository $configRepo
+     * @param string $amount
+     * @param string $currency
+     * @return array
+     */
+    private function getMessageTemplates(ConfigRepository $configRepo, string $amount = '', string $currency = ''): array
     {
-        /** @var Translator $translator */
-        $translator = pluginApp(Translator::class);
+        // Set the custom templates
+        $this->messageTemplates[self::MESSAGE_TEMPLATE_MISSING] = $configRepo->get('CheckoutGoodie.individualization.messageMissing', '');
+        $this->messageTemplates[self::MESSAGE_TEMPLATE_GOAL] = $configRepo->get('CheckoutGoodie.individualization.messageGoal', '');
 
-        $messages = [];
-        $messages['goal'] = $translator->trans('CheckoutGoodie::Frontend.MessageGoal');
-        if (strlen($amount) && strlen($currency)) {
-            $messages['missing'] = $translator->trans('CheckoutGoodie::Frontend.MessageMissing', ['amount' => $amount, 'currency' => $currency]);
-        } else {
-            $messages['missing'] = $translator->trans('CheckoutGoodie::Frontend.MessageMissing');
+        // Default templates as fallback
+        $hasNoIndividualMessageMissing = !strlen($this->messageTemplates[self::MESSAGE_TEMPLATE_MISSING]);
+        $hasNoIndividualMessageGoal = !strlen($this->messageTemplates[self::MESSAGE_TEMPLATE_GOAL]);
+
+        if ($hasNoIndividualMessageMissing || $hasNoIndividualMessageGoal) {
+            /** @var Translator $translator */
+            $translator = pluginApp(Translator::class);
+            if ($hasNoIndividualMessageMissing) {
+                $this->messageTemplates[self::MESSAGE_TEMPLATE_MISSING] = $translator->trans('CheckoutGoodie::Frontend.MessageMissing');
+            }
+            if ($hasNoIndividualMessageGoal) {
+                $this->messageTemplates[self::MESSAGE_TEMPLATE_GOAL] = $translator->trans('CheckoutGoodie::Frontend.MessageGoal');
+            }
         }
 
-        return $messages;
+        // Replace markers
+        if (strlen($amount) && strlen($currency)) {
+            $this->messageTemplates[self::MESSAGE_TEMPLATE_MISSING] = str_replace([':amount', ':currency'], [$amount, $currency], $this->messageTemplates[self::MESSAGE_TEMPLATE_MISSING]);
+        }
+
+        return $this->messageTemplates;
     }
 }
