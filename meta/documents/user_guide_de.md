@@ -10,8 +10,16 @@ Für die Anzeige der Gratiszugabe musst du die entsprechenden Werte in der Plugi
 2. Wähle das gewünschte Plugin-Set aus.
 3. Klicke auf **Gratiszugabe im Warenkorb anzeigen**.<br>→ Eine neue Ansicht öffnet sich.
 4. Wähle den Bereich **Allgemein** aus der Liste.
-5. Trage deinen gewünschten Warenkorbwert (Brutto) und die Varianten-ID ein.
-6. **Speichere** die Einstellungen.
+5. Trage deinen gewünschten _Warenkorbwert (Brutto)_ und die _Varianten-ID_ ein.
+6. Aktiviere die Checkbox **Aktiv**, damit die Gratiszugabe angezeigt wird
+7. **Speichere** die Einstellungen.
+
+<div class="alert alert-info" role="alert">
+    Achte darauf, dass bei der zu verknüpfenden Variante ein Variantenname und eine Bildverknüpfung hinterlegt ist.
+    Andernfalls wird deine Gratiszugabe mit Dummy-Werten ausgegeben!
+</div>
+
+Hinweis: Verwende die Checkbox **Aktiv**, um die Plugin-Ausgabe temporär abzuschalten ohne die Container-Verknüpfungen zu ändern oder das Plugin im Plugin-Set zu deaktivieren.
 
 Danach die Container-Verknüpfungen anlegen, so dass die Gratiszugabe auch im Frontend deines plentyShop angezeigt wird:
 
@@ -20,6 +28,15 @@ Danach die Container-Verknüpfungen anlegen, so dass die Gratiszugabe auch im Fr
 3. Verknüpfe den Inhalt **Display progress bar to reach goodie** mit dem Container **Ceres::Basket.BeforeBasketTotals** zur Anzeige im Warenkorb
 4. Verknüpfe den Inhalt **Display progress bar to reach goodie** mit dem Container **Ceres::BasketPreview.BeforeBasketTotals** zur Anzeige in der Warenkorbvorschau
 5. Verknüpfe den Inhalt **Display progress bar to reach goodie** mit dem Container **Ceres::Checkout.BeforeBasketTotals** zur Anzeige in der Kasse
+
+### Individualisierung
+
+| Einstellung                        | Beschreibung |
+|------------------------------------|---------------|
+| Nachricht Nichterreichen Warenwert | Text bei Nichterreichen des Warenkorbwert, folgende Platzhalter stehen zur Verfügung: `:amount` für den fehlenden Betrag und `:currency` für die Währung. |
+| Nachricht Warenwert erreicht       | Text bei Erreichen des Warenkorbwert, d.h. sobald die Gratiszugabe hinzugefügt ist |
+
+Tabelle 1: Konfigurationsoptionen Individualisierung
 
 ### Ereignisaktion einrichten
 
