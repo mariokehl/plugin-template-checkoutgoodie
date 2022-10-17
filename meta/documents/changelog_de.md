@@ -1,5 +1,10 @@
 # Versionshinweise für "Gratiszugabe im Warenkorb anzeigen"
 
+## v1.0.3 (17.10.2022)
+
+### Geändert
+- Die Installationsanleitung der Container-Verknüpfungen wurde aufgrund von User Feedback erweitert
+
 ## v1.0.2 (05.10.2022)
 
 ### Geändert

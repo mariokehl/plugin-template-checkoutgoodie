@@ -9,7 +9,7 @@
     ],
     "namespace": "CheckoutGoodie",
     "type": "template",
-    "version": "1.0.2",
+    "version": "1.0.3",
     "price": 0,
     "description": "plentymarkets plugin to show goodie in frontend",
     "shortDescription": {
@@ -27,15 +27,15 @@
     "dataProviders": [
         {
             "key": "CheckoutGoodie\\Containers\\CheckoutGoodieBasketListContainer",
-            "name": "Display goodie after basket list",
+            "name": "Display Goodie after Basket List",
             "description": "",
             "defaultLayoutContainer": "Ceres::Script.AfterScriptsLoaded"
         },
         {
             "key": "CheckoutGoodie\\Containers\\CheckoutGoodieProgressBarContainer",
-            "name": "Display progress bar to reach goodie",
-            "description": "",
-            "defaultLayoutContainer": "Ceres::BasketPreview.BeforeBasketTotals"
+            "name": "Display Progress Bar to reach Goodie",
+            "description": "For usage in Shopping Cart, Shopping Cart Preview and Checkout",
+            "defaultLayoutContainer": "Ceres::Basket.BeforeBasketTotals"
         }
     ],
     "license": "",

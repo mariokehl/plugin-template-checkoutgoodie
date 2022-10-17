@@ -1,5 +1,10 @@
 # Release Notes for "Show free goodie in shopping cart"
 
+## v1.0.3 (2022-10-17)
+
+### Changed
+- The installation instructions for the container links have been extended based on user feedback
+
 ## v1.0.2 (2022-10-05)
 
 ### Changed
