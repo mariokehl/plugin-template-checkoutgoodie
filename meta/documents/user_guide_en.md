@@ -24,10 +24,10 @@ Note: Use the **Active** checkbox to temporarily turn off plugin output without 
 Then create the container links so that the free goodie is also displayed in the shopping cart of your plentyShop:
 
 1. Change to the submenu **Container links**.
-2. Associate the **Display goodie after basket list** content with the **Ceres::Script.AfterScriptsLoaded** container
-3. Associate the **Display progress bar to reach goodie** content with the **Ceres::Basket.BeforeBasketTotals** container for display in the shopping cart
-4. Associate the **Display progress bar to reach goodie** content with the **Ceres::BasketPreview.BeforeBasketTotals** container for display in the shopping cart preview
-5. Associate the **Display progress bar to reach goodie** content with the **Ceres::Checkout.BeforeBasketTotals** container for display in the checkout
+2. Associate the **Display Goodie after Basket List** content with the **Ceres::Script.AfterScriptsLoaded** container
+3. Associate the **Display Progress Bar to reach Goodie** content with the **Ceres::Basket.BeforeBasketTotals** container for display in the shopping cart (_Shopping cart: Before basket totals_)
+4. Associate the **Display Progress Bar to reach Goodie (Shopping Cart Preview)** content with the **Ceres::BasketPreview.BeforeBasketTotals** container for display in the shopping cart preview(_Shopping cart preview: Before basket totals_)
+5. Associate the **Display Progress Bar to reach Goodie (Checkout)** content with the **Ceres::Checkout.BeforeBasketTotals** container for display in the checkout (_Checkout: Before basket totals_)
 
 ### Customization
 

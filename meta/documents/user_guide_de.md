@@ -24,10 +24,10 @@ Hinweis: Verwende die Checkbox **Aktiv**, um die Plugin-Ausgabe temporär abzusc
 Danach die Container-Verknüpfungen anlegen, so dass die Gratiszugabe auch im Frontend deines plentyShop angezeigt wird:
 
 1. Wechsel zum Untermenü **Container-Verknüpfungen**.
-2. Verknüpfe den Inhalt **Display goodie after basket list** mit dem Container **Ceres::Script.AfterScriptsLoaded**
-3. Verknüpfe den Inhalt **Display progress bar to reach goodie** mit dem Container **Ceres::Basket.BeforeBasketTotals** zur Anzeige im Warenkorb
-4. Verknüpfe den Inhalt **Display progress bar to reach goodie** mit dem Container **Ceres::BasketPreview.BeforeBasketTotals** zur Anzeige in der Warenkorbvorschau
-5. Verknüpfe den Inhalt **Display progress bar to reach goodie** mit dem Container **Ceres::Checkout.BeforeBasketTotals** zur Anzeige in der Kasse
+2. Verknüpfe den Inhalt **Display Goodie after Basket List** mit dem Container **Ceres::Script.AfterScriptsLoaded**
+3. Verknüpfe den Inhalt **Display Progress Bar to reach Goodie** mit dem Container **Ceres::Basket.BeforeBasketTotals** zur Anzeige im Warenkorb (_Shopping cart: Before basket totals_)
+4. Verknüpfe den Inhalt **Display Progress Bar to reach Goodie** mit dem Container **Ceres::BasketPreview.BeforeBasketTotals** zur Anzeige in der Warenkorbvorschau (_Shopping cart preview: Before basket totals_)
+5. Verknüpfe den Inhalt **Display Progress Bar to reach Goodie** mit dem Container **Ceres::Checkout.BeforeBasketTotals** zur Anzeige in der Kasse (_Checkout: Before basket totals_)
 
 ### Individualisierung
 
