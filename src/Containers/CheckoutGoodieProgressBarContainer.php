@@ -140,6 +140,11 @@ class CheckoutGoodieProgressBarContainer
             $this->messageTemplates[self::MESSAGE_TEMPLATE_MISSING] = str_replace([':amount', ':currency'], [$amount, $currency], $this->messageTemplates[self::MESSAGE_TEMPLATE_MISSING]);
         }
 
+        // Replace german umlauts
+        array_walk_recursive($this->messageTemplates, function (&$value) {
+            $value = htmlentities($value);
+        });
+
         return $this->messageTemplates;
     }
 }
