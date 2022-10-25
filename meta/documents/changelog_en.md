@@ -1,5 +1,11 @@
 # Release Notes for "Show free goodie in shopping cart"
 
+## v1.0.4 (2022-10-25)
+
+### Fixed
+- German umlauts in the stored messages of the plugin configuration could not be displayed correctly
+- The progress bar was not updated when the shopping cart preview was opened for the first time
+
 ## v1.0.3 (2022-10-17)
 
 ### Changed
