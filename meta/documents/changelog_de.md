@@ -1,5 +1,11 @@
 # Versionshinweise für "Gratiszugabe im Warenkorb anzeigen"
 
+## v1.0.4 (25.10.2022)
+
+### Behoben
+- Deutsche Umlaute in den hinterlegten Nachrichten der Plugin-Konfiguration konnten nicht korrekt angezeigt werden
+- Die Fortschrittsanzeige wurde beim erstmaligen Öffnen der Warenkorbvorschau nicht aktualisiert
+
 ## v1.0.3 (17.10.2022)
 
 ### Geändert
