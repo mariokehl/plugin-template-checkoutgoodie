@@ -1,5 +1,10 @@
 # Versionshinweise für "Gratiszugabe im Warenkorb anzeigen"
 
+## v1.0.5 (07.11.2022)
+
+### Behoben
+- Gutscheincodes wurden nicht korrekt beim Warenwert (Brutto) berücksichtigt. Dies konnte dazu führen, dass die Gratiszugabe im Frontend angezeigt, aber von der nachgelagerten Ereignisprozedur nicht dem Auftrag hinzugefügt wurde
+
 ## v1.0.4 (25.10.2022)
 
 ### Behoben
