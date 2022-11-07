@@ -96,7 +96,7 @@ document.addEventListener('afterBasketItemAdded', (e) => {
 // When the shopping cart is updated (gets only triggered for existing basket)
 document.addEventListener('afterBasketChanged', (e) => {
     const basket = e.detail;
-    const itemSum = basket.itemSum;
+    const itemSum = basket.itemSum + (basket.couponCampaignType === 'promotion' ? basket.couponDiscount : 0);
     const goodie = new CheckoutGoodie(itemSum);
     goodie.setLabel();
 }, false);

@@ -1,5 +1,10 @@
 # Release Notes for "Show free goodie in shopping cart"
 
+## v1.0.5 (2022-11-07)
+
+### Fixed
+- Voucher codes were not correctly taken into account in the goods value (gross). This could result in the freebie being displayed in the frontend but not being added to the order by the event procedure
+
 ## v1.0.4 (2022-10-25)
 
 ### Fixed

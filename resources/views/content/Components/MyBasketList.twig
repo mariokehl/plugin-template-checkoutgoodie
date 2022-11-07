@@ -22,7 +22,7 @@
                 </template>
             </transition-group>
             <!-- START: CheckoutGoodie Plugin -->
-            <div v-if="$store.state.basket.data.itemSum >= {{ grossValue }}">
+            <div v-if="($store.state.basket.data.itemSum + ($store.state.basket.data.couponCampaignType === 'promotion' ? $store.state.basket.data.couponDiscount : 0)) >= {{ grossValue }}">
                 <hr class="m-0">
                 <div id="checkout-goodie" class="basket-list-item py-3">
                     <div class="basket-item component-loading with-icon d-flex">
