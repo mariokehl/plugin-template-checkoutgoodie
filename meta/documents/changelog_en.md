@@ -1,5 +1,7 @@
 # Release Notes for "Show free goodie in shopping cart"
 
+## v1.0.6 (2022-11-17)
+
 ### Changed
 - The messages of the progress bar have been moved to the **CMS » Multilingualism** menu so that they can be translated. Furthermore, you can now use emojis or HTML code there
 
