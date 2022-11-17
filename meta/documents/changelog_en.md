@@ -1,5 +1,11 @@
 # Release Notes for "Show free goodie in shopping cart"
 
+### Changed
+- The messages of the progress bar have been moved to the **CMS » Multilingualism** menu so that they can be translated. Furthermore, you can now use emojis or HTML code there
+
+### TODO
+- Customize the translations for the **Individualization** section of the CheckoutGoodie plugin in the **CMS » Multilingualism** menu
+
 ## v1.0.5 (2022-11-07)
 
 ### Fixed

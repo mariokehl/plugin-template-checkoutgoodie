@@ -74,28 +74,28 @@ class CheckoutGoodieProgressBarContainer
 
         if ($basket && $basket instanceof Basket) {
             $currAmount = ($minimumGrossValue - $actualItemSum);
-            $this->getLogger(__METHOD__)->debug('CheckoutGoodie::Plenty.Basket', ['basket' => $basket]);
+            $this->getLogger(__METHOD__)->debug('CheckoutGoodie::Debug.Basket', ['basket' => $basket]);
             $percentage = ($actualItemSum / $minimumGrossValue) * 100;
-            $this->getLogger(__METHOD__)->debug('CheckoutGoodie::Frontend.Percentage', ['percentage' => $percentage]);
+            $this->getLogger(__METHOD__)->debug('CheckoutGoodie::Debug.Percentage', ['percentage' => $percentage]);
             $percentage = floor($percentage);
-            $this->getLogger(__METHOD__)->debug('CheckoutGoodie::Frontend.Percentage', ['percentage' => $percentage]);
+            $this->getLogger(__METHOD__)->debug('CheckoutGoodie::Debug.Percentage', ['percentage' => $percentage]);
             $percentage = ($percentage > 100) ? 100 : $percentage;
-            $this->getLogger(__METHOD__)->debug('CheckoutGoodie::Frontend.Percentage', ['percentage' => $percentage]);
+            $this->getLogger(__METHOD__)->debug('CheckoutGoodie::Debug.Percentage', ['percentage' => $percentage]);
         }
 
         // The currency
         $currency = $basket->currency ?? 'EUR';
 
         // The messages
-        $messages = $this->getMessageTemplates($configRepo);
-        $this->getLogger(__METHOD__)->debug('CheckoutGoodie::Plenty.MessageTemplates', ['messages' => $messages]);
+        $messages = $this->getMessageTemplates();
+        $this->getLogger(__METHOD__)->debug('CheckoutGoodie::Debug.MsgTemplates', ['messages' => $messages]);
         $label = '';
         if ($percentage < 100) {
-            $label = $this->getMessageTemplates($configRepo, number_format($currAmount, 2, ',', ''), $currency)[self::MESSAGE_TEMPLATE_MISSING];
-            $this->getLogger(__METHOD__)->debug('CheckoutGoodie::Frontend.ProgressText', ['label' => $label, 'percentageLower' => true]);
+            $label = $this->getMessageTemplates(number_format($currAmount, 2, ',', ''), $currency)[self::MESSAGE_TEMPLATE_MISSING];
+            $this->getLogger(__METHOD__)->debug('CheckoutGoodie::Debug.ProgressText', ['label' => $label, 'percentageLower' => true]);
         } else {
             $label = $messages[self::MESSAGE_TEMPLATE_GOAL];
-            $this->getLogger(__METHOD__)->debug('CheckoutGoodie::Frontend.ProgressText', ['label' => $label]);
+            $this->getLogger(__METHOD__)->debug('CheckoutGoodie::Debug.ProgressText', ['label' => $label]);
         }
 
         return $twig->render('CheckoutGoodie::content.Containers.ProgressBar', [
@@ -104,22 +104,21 @@ class CheckoutGoodieProgressBarContainer
             'label'      => $label,
             'percentage' => $percentage,
             'width'      => 'width: ' . number_format($percentage, 0, '', '') . '%',
-            'messages'   => $messages,
+            //'messages'   => $messages,
             'currency'   => $currency
         ]);
     }
 
     /**
-     * @param ConfigRepository $configRepo
      * @param string $amount
      * @param string $currency
      * @return array
      */
-    private function getMessageTemplates(ConfigRepository $configRepo, string $amount = '', string $currency = ''): array
+    private function getMessageTemplates(string $amount = '', string $currency = ''): array
     {
-        // Set the custom templates
-        $this->messageTemplates[self::MESSAGE_TEMPLATE_MISSING] = $configRepo->get('CheckoutGoodie.individualization.messageMissing', '');
-        $this->messageTemplates[self::MESSAGE_TEMPLATE_GOAL] = $configRepo->get('CheckoutGoodie.individualization.messageGoal', '');
+        // Initialize the custom templates
+        $this->messageTemplates[self::MESSAGE_TEMPLATE_MISSING] = '';
+        $this->messageTemplates[self::MESSAGE_TEMPLATE_GOAL] = '';
 
         // Default templates as fallback
         $hasNoIndividualMessageMissing = !strlen($this->messageTemplates[self::MESSAGE_TEMPLATE_MISSING]);
@@ -129,10 +128,10 @@ class CheckoutGoodieProgressBarContainer
             /** @var Translator $translator */
             $translator = pluginApp(Translator::class);
             if ($hasNoIndividualMessageMissing) {
-                $this->messageTemplates[self::MESSAGE_TEMPLATE_MISSING] = $translator->trans('CheckoutGoodie::Frontend.MessageMissing');
+                $this->messageTemplates[self::MESSAGE_TEMPLATE_MISSING] = $translator->trans('CheckoutGoodie::Template.MessageMissing');
             }
             if ($hasNoIndividualMessageGoal) {
-                $this->messageTemplates[self::MESSAGE_TEMPLATE_GOAL] = $translator->trans('CheckoutGoodie::Frontend.MessageGoal');
+                $this->messageTemplates[self::MESSAGE_TEMPLATE_GOAL] = $translator->trans('CheckoutGoodie::Template.MessageGoal');
             }
         }
 
@@ -142,9 +141,9 @@ class CheckoutGoodieProgressBarContainer
         }
 
         // Replace german umlauts
-        array_walk_recursive($this->messageTemplates, function (&$value) {
-            $value = htmlentities($value);
-        });
+        #array_walk_recursive($this->messageTemplates, function (&$value) {
+        #    $value = htmlentities($value);
+        #});
 
         return $this->messageTemplates;
     }
