@@ -1,6 +1,8 @@
+{% set initialMessage = label %}
+
 <div class="mb-4">
     <div class="missing-goodie-amount text-center">
-        {% if percentage == 100 %}<i class="fa fa-check"></i>&nbsp;{% endif %}{{ label | raw }}
+        {{ initialMessage }}
     </div>
     <div class="progress mt-2">
         <div role="progressbar" aria-valuenow="{{ percentage }}" aria-valuemin="0" aria-valuemax="100" class="progress-bar progress-bar-striped bg-success" {% if width | length > 0 %} style="{{ width }}"{% endif %}></div>
@@ -16,11 +18,8 @@
         "grossValue": {{ grossValue }},
         "currency": "{{ currency }}",
         "messages": {
-            "goal": "{{ messages.goal | raw }}",
-            "missing": "{{ messages.missing | raw }}"
-        },
-        "icons": {
-            "goal": "<i class=\"fa fa-check\"><\/i>"
+            "goal": {{ trans("CheckoutGoodie::Template.MessageGoal") | json_encode | raw }},
+            "missing": {{ trans("CheckoutGoodie::Template.MessageMissing") | json_encode | raw }}
         }
     }
 </script>

@@ -1,5 +1,13 @@
 # Versionshinweise für "Gratiszugabe im Warenkorb anzeigen"
 
+## v1.0.6 (17.11.2022)
+
+### Geändert
+- Die Nachrichten der Fortschrittsanzeige wurden in den Bereich **CMS » Mehrsprachigkeit** verschoben, so dass diese übersetzt werden können. Desweiteren kannst du dort nun Emojis oder HTML-Code verwenden
+
+### TODO
+- Passe ggf. die Übersetzungen für die Sektion **Individualisierung** des Plugins CheckoutGoodie im Bereich **CMS » Mehrsprachigkeit** an
+
 ## v1.0.5 (07.11.2022)
 
 ### Behoben

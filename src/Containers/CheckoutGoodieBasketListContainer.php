@@ -44,7 +44,7 @@ class CheckoutGoodieBasketListContainer
 
         /** @var Variation $variation */
         $variation = $variationRepo->findById($configRepo->get('CheckoutGoodie.global.variantId'));
-        $this->getLogger(__METHOD__)->debug('CheckoutGoodie::Plenty.Variation', ['variation' => $variation]);
+        $this->getLogger(__METHOD__)->debug('CheckoutGoodie::Debug.Variation', ['variation' => $variation]);
 
         // The amount to reach
         $minimumGrossValue = $configRepo->get('CheckoutGoodie.global.grossValue', 50);
