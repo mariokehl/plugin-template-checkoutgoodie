@@ -1,30 +1,66 @@
 {
-    "formatVersion": 1,
-    "menu": {
-      "global": {
-        "label": "Config.Global",
-        "formFields": {
-          "global.active": {
-            "type": "checkBox",
-            "label": "Config.GlobalActive"
-          },
-          "global.grossValue": {
-            "type": "inputText",
-            "required": true,
-            "label": "Config.GlobalGoodsValueGross",
-            "options": {
-              "defaultValue": "50"
+  "formatVersion": 1,
+  "menu": {
+    "global": {
+      "label": "Config.Global",
+      "formFields": {
+        "global.active": {
+          "type": "checkBox",
+          "label": "Config.GlobalActive"
+        },
+        "global.grossValue": {
+          "type": "inputText",
+          "required": true,
+          "label": "Config.GlobalGoodsValueGross",
+          "options": {
+            "defaultValue": "50"
+          }
+        },
+        "global.variantId": {
+          "type": "inputText",
+          "required": true,
+          "label": "Config.GlobalVariantID",
+          "options": {
+            "defaultValue": ""
+          }
+        },
+        "global.tier1": {
+          "type": "verticalContainer",
+          "label": "Config.GlobalTier1Container",
+          "options": {
+            "containerEntries": {
+              "global.tier1.grossValue": {
+                "type": "inputText",
+                "label": "Config.GlobalTier1GrossValue",
+                "required": false
+              },
+              "global.tier1.variantId": {
+                "type": "inputText",
+                "label": "Config.GlobalTier1VariantID",
+                "required": false
+              }
             }
-          },
-          "global.variantId": {
-            "type": "inputText",
-            "required": true,
-            "label": "Config.GlobalVariantID",
-            "options": {
-              "defaultValue": ""
+          }
+        },
+        "global.tier2": {
+          "type": "verticalContainer",
+          "label": "Config.GlobalTier2Container",
+          "options": {
+            "containerEntries": {
+              "global.tier2.grossValue": {
+                "type": "inputText",
+                "label": "Config.GlobalTier2GrossValue",
+                "required": false
+              },
+              "global.tier2.variantId": {
+                "type": "inputText",
+                "label": "Config.GlobalTier2VariantID",
+                "required": false
+              }
             }
           }
         }
       }
     }
   }
+}

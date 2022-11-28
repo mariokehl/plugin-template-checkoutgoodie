@@ -1,0 +1,6 @@
+.pb-tier-separator {
+    position: absolute;
+    display: block;
+    border: 2px solid var(--light);
+    height: 1rem;
+}

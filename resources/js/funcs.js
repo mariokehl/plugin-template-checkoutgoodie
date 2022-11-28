@@ -22,9 +22,16 @@ function CheckoutGoodie(itemSum) {
         const config = this.getConfig();
         return config.messages.goal;
     },
-    this.getMissingMessage = function (amount) {
+    this.getNextGoal = function () {
         const config = this.getConfig();
-        let msg = config.messages.missing;
+        if (config.tierList.length === 0) return this.getGrossValue();
+        if (config.tierList[0] && this.getItemSum() < config.tierList[0]) return config.tierList[0];
+        if (config.tierList[1] && this.getItemSum() < config.tierList[1]) return config.tierList[1];
+        return this.getGrossValue();
+    },
+    this.getMissingMessage = function (amount, interim) {
+        const config = this.getConfig();
+        let msg = interim ? config.messages.interim : config.messages.missing;
         msg = msg.replace(':amount', Intl.NumberFormat('de-DE', { maximumFractionDigits: 2, minimumFractionDigits: 2 }).format(amount));
         msg = msg.replace(':currency', config.currency);
         return msg;
@@ -38,11 +45,15 @@ function CheckoutGoodie(itemSum) {
     this.calc = function () {
         let output;
 
-        const amount = (this.getGrossValue() - this.getItemSum());
+        const amount = (this.getNextGoal() - this.getItemSum());
         if (amount <= 0) {
             output = this.getGoalReachedMessage();
         } else {
-            output = this.getMissingMessage(amount);
+            if (this.getNextGoal() !== this.getGrossValue()) {
+                output = this.getMissingMessage(amount, true);
+            } else {
+                output = this.getMissingMessage(amount);
+            }
         }
         const pr = this.getPercentage();
         const progress = document.querySelectorAll('[role="progressbar"]')[0];

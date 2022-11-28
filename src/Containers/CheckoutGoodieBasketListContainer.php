@@ -17,6 +17,11 @@ class CheckoutGoodieBasketListContainer
     use Loggable;
 
     /**
+     * @var VariationRepositoryContract
+     */
+    private VariationRepositoryContract $variationRepo;
+
+    /**
      * Renders the template.
      * 
      * @param Twig $twig The twig instance
@@ -40,20 +45,61 @@ class CheckoutGoodieBasketListContainer
         }
 
         /** @var VariationRepositoryContract $variationRepo */
-        $variationRepo = pluginApp(VariationRepositoryContract::class);
+        $this->variationRepo = pluginApp(VariationRepositoryContract::class);
 
-        /** @var Variation $variation */
-        $variation = $variationRepo->findById($configRepo->get('CheckoutGoodie.global.variantId'));
-        $this->getLogger(__METHOD__)->debug('CheckoutGoodie::Debug.Variation', ['variation' => $variation]);
+        // Setup the tiers
+        $tierList = [];
 
-        // The amount to reach
-        $minimumGrossValue = $configRepo->get('CheckoutGoodie.global.grossValue', 50);
+        // Tier 0 (default)
+        $tierList[] = [
+            'variations' => $this->assignVariants($configRepo->get('CheckoutGoodie.global.variantId', '')),
+            'grossValue' => $configRepo->get('CheckoutGoodie.global.grossValue', 50)
+        ];
 
-        return $twig->render('CheckoutGoodie::content.Components.MyBasketList', [
-            'variationName'  => $variation->name,
-            'variationImage' => $this->getPreviewImageUrl($variation),
-            'grossValue'     => $minimumGrossValue
-        ]);
+        // Tier 1
+        if (
+            $configRepo->get('CheckoutGoodie.global.tier1.grossValue', 0) &&
+            $configRepo->get('CheckoutGoodie.global.tier1.variantId')
+        ) {
+            $tierList[] = [
+                'variations' => $this->assignVariants($configRepo->get('CheckoutGoodie.global.tier1.variantId', '')),
+                'grossValue' => $configRepo->get('CheckoutGoodie.global.tier1.grossValue', 0)
+            ];
+        } else {
+            $tierList[] = ['grossValue' => false];
+        }
+
+        // Tier 2
+        if (
+            $configRepo->get('CheckoutGoodie.global.tier2.grossValue', 0) &&
+            $configRepo->get('CheckoutGoodie.global.tier2.variantId')
+        ) {
+            $tierList[] = [
+                'variations' => $this->assignVariants($configRepo->get('CheckoutGoodie.global.tier2.variantId', '')),
+                'grossValue' => $configRepo->get('CheckoutGoodie.global.tier2.grossValue', 0)
+            ];
+        } else {
+            $tierList[] = ['grossValue' => false];
+        }
+        $this->getLogger(__METHOD__)->debug('CheckoutGoodie::Debug.TierList', ['tierList' => $tierList]);
+
+        return $twig->render('CheckoutGoodie::content.Components.MyBasketList', ['tierList' => $tierList]);
+    }
+
+    /**
+     * @param string $variations comma separated list of variant ids
+     * @return array
+     */
+    private function assignVariants(string $variations): array
+    {
+        $assignments = [];
+        foreach (explode(',', $variations) as $variationId) {
+            /** @var Variation $variation */
+            $variation = $this->variationRepo->findById($variationId);
+            $this->getLogger(__METHOD__)->debug('CheckoutGoodie::Debug.Variation', ['variation' => $variation]);
+            $assignments[$variation->id] = ['variationName' => $variation->name, 'variationImage' => $this->getPreviewImageUrl($variation)];
+        }
+        return $assignments;
     }
 
     /**
@@ -65,10 +111,8 @@ class CheckoutGoodieBasketListContainer
         $images = $variation->images;
         if (count($images) === 0) {
             return 'https://dummyimage.com/150x150/000/fff';
-        }
-        if (count($images) === 1) {
+        } else {
             return $images[0]['urlPreview'];
         }
-        return '';
     }
 }

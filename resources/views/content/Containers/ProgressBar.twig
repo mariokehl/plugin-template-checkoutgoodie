@@ -5,6 +5,12 @@
         {{ initialMessage }}
     </div>
     <div class="progress mt-2">
+        {% if separators.tier1 %}
+            <span class="pb-tier-separator" {% if separators.tier1 | length > 0 %}style="left: {{ separators.tier1 }};"{% endif %}></span>
+        {% endif %}
+        {% if separators.tier2 %}
+            <span class="pb-tier-separator" {% if separators.tier2 | length > 0 %}style="left: {{ separators.tier2 }};"{% endif %}></span>
+        {% endif %}
         <div role="progressbar" aria-valuenow="{{ percentage }}" aria-valuemin="0" aria-valuemax="100" class="progress-bar progress-bar-striped bg-success" {% if width | length > 0 %} style="{{ width }}"{% endif %}></div>
     </div>
 </div>
@@ -15,10 +21,12 @@
             "amount": {{ itemSum }},
             "percentage": {{ percentage }}
         },
+        "tierList": {{ tierList | json_encode | raw }},
         "grossValue": {{ grossValue }},
         "currency": "{{ currency }}",
         "messages": {
             "goal": {{ trans("CheckoutGoodie::Template.MessageGoal") | json_encode | raw }},
+            "interim": {{ trans("CheckoutGoodie::Template.MessageInterim") | json_encode | raw }},
             "missing": {{ trans("CheckoutGoodie::Template.MessageMissing") | json_encode | raw }}
         }
     }

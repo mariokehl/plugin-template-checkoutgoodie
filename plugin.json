@@ -9,7 +9,7 @@
     ],
     "namespace": "CheckoutGoodie",
     "type": "template",
-    "version": "1.0.6",
+    "version": "28111914",
     "price": 333.20,
     "description": "plentymarkets plugin to show goodie in frontend",
     "shortDescription": {
@@ -25,6 +25,12 @@
     "isClosedSource": true,
     "serviceProvider": "CheckoutGoodie\\Providers\\CheckoutGoodieServiceProvider",
     "dataProviders": [
+        {
+            "key": "CheckoutGoodie\\Containers\\CheckoutGoodieStyleContainer",
+            "name": "Checkout Goodie CSS",
+            "description": "",
+            "defaultLayoutContainer": "Ceres::Template.Style"
+        },
         {
             "key": "CheckoutGoodie\\Containers\\CheckoutGoodieBasketListContainer",
             "name": "Display Goodie after Basket List",
