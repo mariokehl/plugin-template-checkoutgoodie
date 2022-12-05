@@ -1,18 +1,59 @@
 {% set initialMessage = label %}
 
+{% block StageImage %}<div v-tooltip data-toggle="tooltip" data-placement="bottom" title="{{ variation.variationName }}" class="pb-stage-img"><img class="rounded" src="{{ variation.variationImage }}" alt=""></div>{% endblock %}
+
 <div class="mb-4">
     <div class="missing-goodie-amount text-center">
         {{ initialMessage }}
     </div>
-    <div class="progress mt-2">
+    <div class="checkout-goodie-progress progress mt-2">
         {% if separators.tier1 %}
-            <span class="pb-tier-separator" {% if separators.tier1 | length > 0 %}style="left: {{ separators.tier1 }};"{% endif %}></span>
+            <span class="pb-tier-separator"{% if separators.tier1 | length > 0 %} style="left: {{ separators.tier1 }};"{% endif %}></span>
         {% endif %}
         {% if separators.tier2 %}
-            <span class="pb-tier-separator" {% if separators.tier2 | length > 0 %}style="left: {{ separators.tier2 }};"{% endif %}></span>
+            <span class="pb-tier-separator"{% if separators.tier2 | length > 0 %} style="left: {{ separators.tier2 }};"{% endif %}></span>
         {% endif %}
         <div role="progressbar" aria-valuenow="{{ percentage }}" aria-valuemin="0" aria-valuemax="100" class="progress-bar progress-bar-striped bg-success" {% if width | length > 0 %} style="{{ width }}"{% endif %}></div>
     </div>
+    {% if config("CheckoutGoodie.individualization.thumbs") == "true" %}
+        <div class="pb-stage-images mt-1">
+            {% if separators.tier2 and separators.tier1 %}
+                <div class="pb-stage"{% if separators.tier1 | length > 0 %} style="width: {{ separators.tier1 }};"{% endif %}>
+                    {% for variation in tierList[0].variations %}
+                        {{ block('StageImage') }}
+                    {% endfor %}
+                </div>
+                {% set tier2Value = separators.tier2 | replace({'%': ''}) | number_format(4, '.', '') %}
+                <div class="pb-stage"{% if separators.tier2 | length > 0 %} style="width: {{ 100 - tier2Value }}%;"{% endif %}>
+                    {% for variation in tierList[1].variations %}
+                        {{ block('StageImage') }}
+                    {% endfor %}
+                </div>
+                <div class="pb-stage pb-stage-default">
+                    {% for variation in tierList[2].variations %}
+                        {{ block('StageImage') }}
+                    {% endfor %}
+                </div>
+            {% elseif not separators.tier2 and separators.tier1  %}
+                <div class="pb-stage"{% if separators.tier1 | length > 0 %} style="width: {{ separators.tier1 }};"{% endif %}>
+                    {% for variation in tierList[0].variations %}
+                        {{ block('StageImage') }}
+                    {% endfor %}
+                </div>
+                <div class="pb-stage pb-stage-default">
+                    {% for variation in tierList[1].variations %}
+                        {{ block('StageImage') }}
+                    {% endfor %}
+                </div>
+            {% else %}
+                <div class="pb-stage pb-stage-default">
+                    {% for variation in tierList[0].variations %}
+                        {{ block('StageImage') }}
+                    {% endfor %}
+                </div>
+            {% endif %}
+        </div>
+    {% endif %}
 </div>
 
 <script id="checkout-goodie-config" type="application/json">
@@ -21,7 +62,7 @@
             "amount": {{ itemSum }},
             "percentage": {{ percentage }}
         },
-        "tierList": {{ tierList | json_encode | raw }},
+        "thresholds": {{ thresholds | json_encode | raw }},
         "grossValue": {{ grossValue }},
         "currency": "{{ currency }}",
         "messages": {

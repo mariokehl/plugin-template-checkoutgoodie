@@ -3,6 +3,7 @@
 namespace CheckoutGoodie\Containers;
 
 use CheckoutGoodie\Helpers\SubscriptionInfoHelper;
+use CheckoutGoodie\Helpers\TierListHelper;
 use Plenty\Modules\Basket\Contracts\BasketRepositoryContract;
 use Plenty\Modules\Basket\Models\Basket;
 use Plenty\Plugin\ConfigRepository;
@@ -58,6 +59,10 @@ class CheckoutGoodieProgressBarContainer
             return '';
         }
 
+        /** @var TierListHelper $tierListHelper */
+        $tierListHelper = pluginApp(TierListHelper::class);
+        $tierList = $tierListHelper->getAll();
+
         // The amounts to reach
         $minValue = floatval($configRepo->get('CheckoutGoodie.global.grossValue', 50));
         $tier1GrossValue = floatval($configRepo->get('CheckoutGoodie.global.tier1.grossValue', 0));
@@ -92,11 +97,11 @@ class CheckoutGoodieProgressBarContainer
         $currency = $basket->currency ?? 'EUR';
 
         // Separators
-        $tierList = [];
+        $thresholds = [];
         $tier1Separator = $tier1GrossValue ? ($minValue * 100) / $maxValue : false;
-        if ($tier1Separator) $tierList[] = $minValue;
+        if ($tier1Separator) $thresholds[] = $minValue;
         $tier2Separator = $tier2GrossValue ? ($tier1GrossValue * 100) / $maxValue : false;
-        if ($tier2Separator) $tierList[] = $tier1GrossValue;
+        if ($tier2Separator) $thresholds[] = $tier1GrossValue;
 
         // The messages
         $messages = $this->getMessageTemplates();
@@ -104,9 +109,9 @@ class CheckoutGoodieProgressBarContainer
         $label = '';
         if ($percentage < 100) {
             if ($tier2Separator) {
-                $label = $this->getMessageTemplates(number_format($tierList[1] - $actualItemSum, 2, ',', ''), $currency)[self::MESSAGE_TEMPLATE_INTERIM];
+                $label = $this->getMessageTemplates(number_format($thresholds[1] - $actualItemSum, 2, ',', ''), $currency)[self::MESSAGE_TEMPLATE_INTERIM];
             } elseif ($tier1Separator) {
-                $label = $this->getMessageTemplates(number_format($tierList[0] - $actualItemSum, 2, ',', ''), $currency)[self::MESSAGE_TEMPLATE_INTERIM];
+                $label = $this->getMessageTemplates(number_format($thresholds[0] - $actualItemSum, 2, ',', ''), $currency)[self::MESSAGE_TEMPLATE_INTERIM];
             } else {
                 $label = $this->getMessageTemplates(number_format($currAmount, 2, ',', ''), $currency)[self::MESSAGE_TEMPLATE_MISSING];
             }
@@ -118,14 +123,15 @@ class CheckoutGoodieProgressBarContainer
 
         return $twig->render('CheckoutGoodie::content.Containers.ProgressBar', [
             'tierList'   => $tierList,
+            'thresholds' => $thresholds,
             'grossValue' => $maxValue,
             'itemSum'    => $actualItemSum,
             'label'      => $label,
             'percentage' => $percentage,
             'width'      => 'width: ' . number_format($percentage, 0, '', '') . '%',
             'separators' => [
-                'tier1' => $tier1Separator ? $tier1Separator . '%' : '',
-                'tier2' => $tier2Separator ? $tier2Separator . '%' : '',
+                'tier1' => $tier1Separator ? number_format($tier1Separator, 4, '.', '') . '%' : '',
+                'tier2' => $tier2Separator ? number_format($tier2Separator, 4, '.', '') . '%' : '',
             ],
             //'messages'   => $messages,
             'currency'   => $currency

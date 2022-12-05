@@ -24,9 +24,9 @@ function CheckoutGoodie(itemSum) {
     },
     this.getNextGoal = function () {
         const config = this.getConfig();
-        if (config.tierList.length === 0) return this.getGrossValue();
-        if (config.tierList[0] && this.getItemSum() < config.tierList[0]) return config.tierList[0];
-        if (config.tierList[1] && this.getItemSum() < config.tierList[1]) return config.tierList[1];
+        if (config.thresholds.length === 0) return this.getGrossValue();
+        if (config.thresholds[0] && this.getItemSum() < config.thresholds[0]) return config.thresholds[0];
+        if (config.thresholds[1] && this.getItemSum() < config.thresholds[1]) return config.thresholds[1];
         return this.getGrossValue();
     },
     this.getMissingMessage = function (amount, interim) {

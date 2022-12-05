@@ -61,6 +61,18 @@
           }
         }
       }
+    },
+    "individualization": {
+      "label": "Config.Individualization",
+      "formFields": {
+        "individualization.thumbs": {
+          "type": "checkBox",
+          "label": "Config.IndividualizationThumbnails",
+          "options": {
+            "defaultValue": "true"
+          }
+        }
+      }
     }
   }
 }
