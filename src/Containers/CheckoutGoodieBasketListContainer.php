@@ -3,8 +3,7 @@
 namespace CheckoutGoodie\Containers;
 
 use CheckoutGoodie\Helpers\SubscriptionInfoHelper;
-use Plenty\Modules\Item\Variation\Contracts\VariationRepositoryContract;
-use Plenty\Modules\Item\Variation\Models\Variation;
+use CheckoutGoodie\Helpers\TierListHelper;
 use Plenty\Plugin\ConfigRepository;
 use Plenty\Plugin\Log\Loggable;
 use Plenty\Plugin\Templates\Twig;
@@ -39,36 +38,10 @@ class CheckoutGoodieBasketListContainer
             return '';
         }
 
-        /** @var VariationRepositoryContract $variationRepo */
-        $variationRepo = pluginApp(VariationRepositoryContract::class);
+        /** @var TierListHelper $tierListHelper */
+        $tierListHelper = pluginApp(TierListHelper::class);
+        $tierList = $tierListHelper->getAll();
 
-        /** @var Variation $variation */
-        $variation = $variationRepo->findById($configRepo->get('CheckoutGoodie.global.variantId'));
-        $this->getLogger(__METHOD__)->debug('CheckoutGoodie::Debug.Variation', ['variation' => $variation]);
-
-        // The amount to reach
-        $minimumGrossValue = $configRepo->get('CheckoutGoodie.global.grossValue', 50);
-
-        return $twig->render('CheckoutGoodie::content.Components.MyBasketList', [
-            'variationName'  => $variation->name,
-            'variationImage' => $this->getPreviewImageUrl($variation),
-            'grossValue'     => $minimumGrossValue
-        ]);
-    }
-
-    /**
-     * @param Variation $variation
-     * @return string
-     */
-    private function getPreviewImageUrl(Variation $variation): string
-    {
-        $images = $variation->images;
-        if (count($images) === 0) {
-            return 'https://dummyimage.com/150x150/000/fff';
-        }
-        if (count($images) === 1) {
-            return $images[0]['urlPreview'];
-        }
-        return '';
+        return $twig->render('CheckoutGoodie::content.Components.MyBasketList', ['tierList' => $tierList]);
     }
 }
