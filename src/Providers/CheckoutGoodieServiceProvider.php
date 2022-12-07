@@ -25,6 +25,7 @@ class CheckoutGoodieServiceProvider extends ServiceProvider
      */
     public function register()
     {
+        $this->getApplication()->register(CheckoutGoodieRouteServiceProvider::class);
     }
 
     /**

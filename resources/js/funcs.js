@@ -1,10 +1,19 @@
 /**
  * Main function to handle goodie goal
- * 
- * @param {number|null} itemSum 
  */
-function CheckoutGoodie(itemSum) {
-    this.itemSum = itemSum;
+function CheckoutGoodie() {
+    this.itemSum = 0.0;
+    this.sync = function () {
+        let self = this;
+        $.ajax({
+            url: '/plugin/checkout-goodie/basket-value/',
+            method: 'GET',
+            success: function (res) {
+              console.log(res);
+              self.itemSum = res.basketValue;
+            }
+        });
+    },
     this.getConfig = function () {
         const json = JSON.parse(document.getElementById('checkout-goodie-config').textContent);
         return json;
@@ -81,36 +90,21 @@ function CheckoutGoodie(itemSum) {
                 el.innerHTML = self.calc();
             });
         }
-    }
+    },
+    this.sync();
 }
 
 // Initial setup in checkout view
-window.addEventListener('load', () => {
-    const goodie = new CheckoutGoodie(null);
-    goodie.setLabel();
-}, false);
+window.addEventListener('load', () => { new CheckoutGoodie().setLabel(); }, false);
 
 // Shopping cart preview is opened for the first time
-waitForElement('.basket-preview').then(() => {
-    const goodie = new CheckoutGoodie(null);
-    goodie.setLabel();
-});
+waitForElement('.basket-preview').then(() => { new CheckoutGoodie().setLabel(); });
 
 // A new item has been added to the shopping cart
-document.addEventListener('afterBasketItemAdded', (e) => {
-    const textualAmount = document.querySelector('.toggle-basket-preview .badge').textContent; // e.g. 44,99 EUR
-    const itemSum = toFloat(textualAmount);
-    const goodie = new CheckoutGoodie(itemSum);
-    goodie.setLabel();
-}, false);
+document.addEventListener('afterBasketItemAdded', () => { new CheckoutGoodie().setLabel(); }, false);
 
 // When the shopping cart is updated (gets only triggered for existing basket)
-document.addEventListener('afterBasketChanged', (e) => {
-    const basket = e.detail;
-    const itemSum = basket.itemSum + (basket.couponCampaignType === 'promotion' ? basket.couponDiscount : 0);
-    const goodie = new CheckoutGoodie(itemSum);
-    goodie.setLabel();
-}, false);
+document.addEventListener('afterBasketChanged', () => { new CheckoutGoodie().setLabel(); }, false);
 
 
 /**

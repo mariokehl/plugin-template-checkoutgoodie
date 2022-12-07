@@ -31,13 +31,11 @@
             "containerEntries": {
               "global.tier1.grossValue": {
                 "type": "inputText",
-                "label": "Config.GlobalTier1GrossValue",
-                "required": false
+                "label": "Config.GlobalTier1GrossValue"
               },
               "global.tier1.variantId": {
                 "type": "inputText",
-                "label": "Config.GlobalTier1VariantID",
-                "required": false
+                "label": "Config.GlobalTier1VariantID"
               }
             }
           }
@@ -49,15 +47,20 @@
             "containerEntries": {
               "global.tier2.grossValue": {
                 "type": "inputText",
-                "label": "Config.GlobalTier2GrossValue",
-                "required": false
+                "label": "Config.GlobalTier2GrossValue"
               },
               "global.tier2.variantId": {
                 "type": "inputText",
-                "label": "Config.GlobalTier2VariantID",
-                "required": false
+                "label": "Config.GlobalTier2VariantID"
               }
             }
+          }
+        },
+        "global.categoryFilter": {
+          "type": "inputText",
+          "label": "Config.GlobalCategoryFilter",
+          "options": {
+            "defaultValue": ""
           }
         }
       }

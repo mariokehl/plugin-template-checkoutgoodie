@@ -9,7 +9,7 @@
     ],
     "namespace": "CheckoutGoodie",
     "type": "template",
-    "version": "05121515",
+    "version": "07121015",
     "price": 333.20,
     "description": "plentymarkets plugin to show goodie in frontend",
     "shortDescription": {
