@@ -42,7 +42,7 @@ function CheckoutGoodie(itemSum) {
         pr = (pr > 100) ? 100 : pr;
         return pr;
     },
-    this.calc = function () {
+    this.calc = function (el) {
         let output;
 
         const amount = (this.getNextGoal() - this.getItemSum());
@@ -56,9 +56,23 @@ function CheckoutGoodie(itemSum) {
             }
         }
         const pr = this.getPercentage();
-        const progress = document.querySelectorAll('[role="progressbar"]')[0];
-        progress.setAttribute('aria-valuenow', pr);
-        progress.style['width'] = pr + '%';
+        const pb = document.querySelectorAll('[role="progressbar"]')[0];
+        pb.setAttribute('aria-valuenow', pr);
+        pb.style['width'] = pr + '%';
+
+        // Toggle classes
+        const config = this.getConfig();
+        if (amount <= 0) {
+            el.classList.remove(config.classes.missingAmount);
+            el.classList.add(config.classes.reachedAmount);
+            pb.classList.remove(config.classes.missingAmount);
+            pb.classList.add(config.classes.reachedAmount);
+        } else {
+            el.classList.remove(config.classes.reachedAmount);
+            el.classList.add(config.classes.missingAmount);
+            pb.classList.remove(config.classes.reachedAmount);
+            pb.classList.add(config.classes.missingAmount);
+        }
 
         return output;
     },
@@ -78,7 +92,9 @@ function CheckoutGoodie(itemSum) {
         } else {
             const self = this;
             Array.prototype.forEach.call(els, function (el) {
-                el.innerHTML = self.calc();
+                el.style.display = 'none';
+                el.innerHTML = self.calc(el);
+                el.style.display = 'block';
             });
         }
     }

@@ -1,9 +1,11 @@
 {% set initialMessage = label %}
+{% set classMissingAmount = config("CheckoutGoodie.individualization.classMissingAmount") %}
+{% set classReachedAmount = config("CheckoutGoodie.individualization.classReachedAmount") %}
 
 {% block StageImage %}<div v-tooltip data-toggle="tooltip" data-placement="bottom" title="{{ variation.variationName }}" class="pb-stage-img"><img class="rounded" src="{{ variation.variationImage }}" alt=""></div>{% endblock %}
 
 <div class="mb-4">
-    <div class="missing-goodie-amount text-center">
+    <div class="missing-goodie-amount text-center{% if config("CheckoutGoodie.individualization.textPadding") == "true" %} p-1{% endif %} {% if percentage == 100 %}{{ classReachedAmount }}{% else %}{{ classMissingAmount }}{% endif %}">
         {{ initialMessage }}
     </div>
     <div class="checkout-goodie-progress progress mt-2">
@@ -13,7 +15,7 @@
         {% if separators.tier2 %}
             <span class="pb-tier-separator"{% if separators.tier2 | length > 0 %} style="left: {{ separators.tier2 }};"{% endif %}></span>
         {% endif %}
-        <div role="progressbar" aria-valuenow="{{ percentage }}" aria-valuemin="0" aria-valuemax="100" class="progress-bar progress-bar-striped bg-success" {% if width | length > 0 %} style="{{ width }}"{% endif %}></div>
+        <div role="progressbar" aria-valuenow="{{ percentage }}" aria-valuemin="0" aria-valuemax="100" class="progress-bar{% if config("CheckoutGoodie.individualization.progressBarStriped") == "true" %} progress-bar-striped{% endif %} {% if percentage == 100 %}{{ classReachedAmount }}{% else %}{{ classMissingAmount }}{% endif %}" {% if width | length > 0 %} style="{{ width }}"{% endif %}></div>
     </div>
     {% if config("CheckoutGoodie.individualization.thumbs") == "true" %}
         <div class="pb-stage-images mt-1">
@@ -69,6 +71,10 @@
             "goal": {{ trans("CheckoutGoodie::Template.MessageGoal") | json_encode | raw }},
             "interim": {{ trans("CheckoutGoodie::Template.MessageInterim") | json_encode | raw }},
             "missing": {{ trans("CheckoutGoodie::Template.MessageMissing") | json_encode | raw }}
+        },
+        "classes": {
+            "missingAmount": "{{ classMissingAmount }}",
+            "reachedAmount": "{{ classReachedAmount }}"
         }
     }
 </script>

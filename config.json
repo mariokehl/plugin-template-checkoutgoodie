@@ -31,13 +31,11 @@
             "containerEntries": {
               "global.tier1.grossValue": {
                 "type": "inputText",
-                "label": "Config.GlobalTier1GrossValue",
-                "required": false
+                "label": "Config.GlobalTier1GrossValue"
               },
               "global.tier1.variantId": {
                 "type": "inputText",
-                "label": "Config.GlobalTier1VariantID",
-                "required": false
+                "label": "Config.GlobalTier1VariantID"
               }
             }
           }
@@ -49,13 +47,11 @@
             "containerEntries": {
               "global.tier2.grossValue": {
                 "type": "inputText",
-                "label": "Config.GlobalTier2GrossValue",
-                "required": false
+                "label": "Config.GlobalTier2GrossValue"
               },
               "global.tier2.variantId": {
                 "type": "inputText",
-                "label": "Config.GlobalTier2VariantID",
-                "required": false
+                "label": "Config.GlobalTier2VariantID"
               }
             }
           }
@@ -65,6 +61,67 @@
     "individualization": {
       "label": "Config.Individualization",
       "formFields": {
+        "individualization.classMissingAmount": {
+          "type": "selectBox",
+          "label": "Config.IndividualizationClassMissing",
+          "options": {
+            "defaultValue": "bg-warning",
+            "selectBoxValues": [
+              {
+                "value": "bg-success",
+                "caption": "Config.IndividualizationClassSuccess"
+              },
+              {
+                "value": "bg-warning",
+                "caption": "Config.IndividualizationClassWarning"
+              },
+              {
+                "value": "bg-info",
+                "caption": "Config.IndividualizationClassInfo"
+              },
+              {
+                "value": "bg-custom",
+                "caption": "Config.IndividualizationClassCustom"
+              }
+            ]
+          }
+        },
+        "individualization.classReachedAmount": {
+          "type": "selectBox",
+          "label": "Config.IndividualizationClassGoal",
+          "options": {
+            "defaultValue": "bg-success",
+            "selectBoxValues": [
+              {
+                "value": "bg-success",
+                "caption": "Config.IndividualizationClassSuccess"
+              },
+              {
+                "value": "bg-warning",
+                "caption": "Config.IndividualizationClassWarning"
+              },
+              {
+                "value": "bg-info",
+                "caption": "Config.IndividualizationClassInfo"
+              },
+              {
+                "value": "bg-custom",
+                "caption": "Config.IndividualizationClassCustom"
+              }
+            ]
+          }
+        },
+        "individualization.textPadding": {
+          "type": "checkBox",
+          "label": "Config.IndividualizationTextPadding",
+          "options": {
+            "defaultValue": "true"
+          }
+        },
+        "individualization.progressBarStriped": {
+          "type": "checkBox",
+          "label": "Config.IndividualizationProgressBarStriped"
+        },
         "individualization.thumbs": {
           "type": "checkBox",
           "label": "Config.IndividualizationThumbnails",
