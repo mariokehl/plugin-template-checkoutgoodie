@@ -22,6 +22,7 @@
                 </template>
             </transition-group>
             <!-- START: CheckoutGoodie Plugin -->
+            <div class="checkout-goodie-container"{% if hidden %} style="display: none;"{% endif %}>
             {% if tierList[2].grossValue and tierList[1].grossValue %}
                 <div v-if="($store.state.basket.data.itemSum + ($store.state.basket.data.couponCampaignType === 'promotion' ? $store.state.basket.data.couponDiscount : 0)) >= {{ tierList[2].grossValue }}">
                     {% include "CheckoutGoodie::content.Components.Partials.GoodieItem" with { 'variations': tierList[2].variations } %}
@@ -44,6 +45,7 @@
                     {% include "CheckoutGoodie::content.Components.Partials.GoodieItem" with { 'variations': tierList[0].variations } %}
                 </div>
             {% endif %}
+            </div>
             <!-- END: CheckoutGoodie Plugin -->
         </div>
         <loading-animation v-if="!isBasketInitiallyLoaded" class="d-table w-100"></loading-animation>

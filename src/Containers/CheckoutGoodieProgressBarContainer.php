@@ -2,6 +2,7 @@
 
 namespace CheckoutGoodie\Containers;
 
+use CheckoutGoodie\Helpers\GoodieHelper;
 use CheckoutGoodie\Helpers\SubscriptionInfoHelper;
 use CheckoutGoodie\Helpers\TierListHelper;
 use Plenty\Modules\Basket\Contracts\BasketRepositoryContract;
@@ -47,21 +48,12 @@ class CheckoutGoodieProgressBarContainer
      */
     public function call(Twig $twig): string
     {
+        /** @var GoodieHelper $goodieHelper */
+        $goodieHelper = pluginApp(GoodieHelper::class);
+        if (!$goodieHelper->shouldRender()) return '';
+
         /** @var ConfigRepository $configRepo */
         $configRepo = pluginApp(ConfigRepository::class);
-
-        // Is output active in plugin config?
-        $shouldRender = $configRepo->get('CheckoutGoodie.global.active', 'true');
-
-        /** @var SubscriptionInfoHelper $subscription */
-        $subscription = pluginApp(SubscriptionInfoHelper::class);
-        if (!$subscription->isPaid() || $shouldRender === 'false') {
-            return '';
-        }
-
-        /** @var TierListHelper $tierListHelper */
-        $tierListHelper = pluginApp(TierListHelper::class);
-        $tierList = $tierListHelper->getAll();
 
         // The amounts to reach
         $minValue = floatval($configRepo->get('CheckoutGoodie.global.grossValue', 50));
@@ -121,20 +113,25 @@ class CheckoutGoodieProgressBarContainer
             $this->getLogger(__METHOD__)->debug('CheckoutGoodie::Debug.ProgressText', ['label' => $label]);
         }
 
+        /** @var TierListHelper $tierListHelper */
+        $tierListHelper = pluginApp(TierListHelper::class);
+        $tierList = $tierListHelper->getAll();
+
         return $twig->render('CheckoutGoodie::content.Containers.ProgressBar', [
-            'tierList'   => $tierList,
+            'excludedShippingCountries' => $goodieHelper->getExcludedShippingCountries(),
+            'hidden' => $goodieHelper->isExcludedByShippingCountryId(),
+            'tierList' => $tierList,
             'thresholds' => $thresholds,
             'grossValue' => $maxValue,
-            'itemSum'    => $actualItemSum,
-            'label'      => $label,
+            'itemSum' => $actualItemSum,
+            'label' => $label,
             'percentage' => $percentage,
-            'width'      => 'width: ' . number_format($percentage, 0, '', '') . '%',
+            'width' => 'width: ' . number_format($percentage, 0, '', '') . '%',
             'separators' => [
                 'tier1' => $tier1Separator ? number_format($tier1Separator, 4, '.', '') . '%' : '',
                 'tier2' => $tier2Separator ? number_format($tier2Separator, 4, '.', '') . '%' : '',
             ],
-            //'messages'   => $messages,
-            'currency'   => $currency
+            'currency' => $currency
         ]);
     }
 

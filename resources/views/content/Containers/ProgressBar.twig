@@ -2,7 +2,7 @@
 {% set classMissingAmount = config("CheckoutGoodie.individualization.classMissingAmount") %}
 {% set classReachedAmount = config("CheckoutGoodie.individualization.classReachedAmount") %}
 
-<div class="mb-4">
+<div class="checkout-goodie-container" class="mb-4"{% if hidden %} style="display: none;"{% endif %}>
     <div class="missing-goodie-amount text-center{% if config("CheckoutGoodie.individualization.textPadding") == "true" %} p-1{% endif %} {% if percentage == 100 %}{{ classReachedAmount }}{% else %}{{ classMissingAmount }}{% endif %}">
         {{ initialMessage }}
     </div>
@@ -74,6 +74,7 @@
         "classes": {
             "missingAmount": "{{ classMissingAmount }}",
             "reachedAmount": "{{ classReachedAmount }}"
-        }
+        },
+        "excludedShippingCountries": {{ excludedShippingCountries | json_encode | raw }}
     }
 </script>

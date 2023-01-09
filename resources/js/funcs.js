@@ -97,6 +97,19 @@ function CheckoutGoodie(itemSum) {
                 el.style.display = 'block';
             });
         }
+    },
+    this.toggle = function (shippingCountryId) {
+        const config = this.getConfig();
+        const excludedShippingCountries = config.excludedShippingCountries;
+        let display;
+        if (excludedShippingCountries.includes(shippingCountryId)) {
+            display = 'none';
+        } else {
+            display = 'block';
+        }
+        Array.prototype.forEach.call(document.querySelectorAll('.checkout-goodie-container'), function (el) {
+            el.style.display = display;
+        });
     }
 }
 
@@ -127,6 +140,13 @@ document.addEventListener('afterBasketChanged', (e) => {
     const goodie = new CheckoutGoodie(itemSum);
     goodie.setLabel();
 }, false);
+
+// After changing the shipping country in the checkout
+document.addEventListener('afterShippingCountryChanged', (e) => {
+    const shippingCountryId = e.detail;
+    const goodie = new CheckoutGoodie(null);
+    goodie.toggle(shippingCountryId);
+});
 
 
 /**

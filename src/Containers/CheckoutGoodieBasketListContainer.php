@@ -2,9 +2,8 @@
 
 namespace CheckoutGoodie\Containers;
 
-use CheckoutGoodie\Helpers\SubscriptionInfoHelper;
+use CheckoutGoodie\Helpers\GoodieHelper;
 use CheckoutGoodie\Helpers\TierListHelper;
-use Plenty\Plugin\ConfigRepository;
 use Plenty\Plugin\Log\Loggable;
 use Plenty\Plugin\Templates\Twig;
 
@@ -26,22 +25,17 @@ class CheckoutGoodieBasketListContainer
      */
     public function call(Twig $twig): string
     {
-        /** @var ConfigRepository $configRepo */
-        $configRepo = pluginApp(ConfigRepository::class);
-
-        // Is output active in plugin config?
-        $shouldRender = $configRepo->get('CheckoutGoodie.global.active', 'true');
-
-        /** @var SubscriptionInfoHelper $subscription */
-        $subscription = pluginApp(SubscriptionInfoHelper::class);
-        if (!$subscription->isPaid() || $shouldRender === 'false') {
-            return '';
-        }
+        /** @var GoodieHelper $goodieHelper */
+        $goodieHelper = pluginApp(GoodieHelper::class);
+        if (!$goodieHelper->shouldRender()) return '';
 
         /** @var TierListHelper $tierListHelper */
         $tierListHelper = pluginApp(TierListHelper::class);
         $tierList = $tierListHelper->getAll();
 
-        return $twig->render('CheckoutGoodie::content.Components.MyBasketList', ['tierList' => $tierList]);
+        return $twig->render('CheckoutGoodie::content.Components.MyBasketList', [
+            'hidden' => $goodieHelper->isExcludedByShippingCountryId(),
+            'tierList' => $tierList
+        ]);
     }
 }
