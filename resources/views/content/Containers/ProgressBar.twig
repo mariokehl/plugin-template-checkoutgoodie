@@ -2,7 +2,7 @@
 {% set classMissingAmount = config("CheckoutGoodie.individualization.classMissingAmount") %}
 {% set classReachedAmount = config("CheckoutGoodie.individualization.classReachedAmount") %}
 
-<div class="checkout-goodie-container" class="mb-4"{% if hidden %} style="display: none;"{% endif %}>
+<div class="checkout-goodie-container mb-4"{% if hidden %} style="display: none;"{% endif %}>
     <div class="missing-goodie-amount text-center{% if config("CheckoutGoodie.individualization.textPadding") == "true" %} p-1{% endif %} {% if percentage == 100 %}{{ classReachedAmount }}{% else %}{{ classMissingAmount }}{% endif %}">
         {{ initialMessage }}
     </div>
@@ -18,13 +18,14 @@
     {% if config("CheckoutGoodie.individualization.thumbs") == "true" %}
         <div class="pb-stage-images mt-1">
             {% if separators.tier2 and separators.tier1 %}
+                {% set tier1Value = separators.tier1 | replace({'%': ''}) | number_format(4, '.', '') %}
                 <div class="pb-stage"{% if separators.tier1 | length > 0 %} style="width: {{ separators.tier1 }};"{% endif %}>
                     {% for variation in tierList[0].variations %}
                         {% block StageImage %}<div v-tooltip data-toggle="tooltip" data-placement="bottom" title="{{ variation.variationName }}" class="pb-stage-img"><img class="rounded" src="{{ variation.variationImage }}" alt=""></div>{% endblock %}
                     {% endfor %}
                 </div>
                 {% set tier2Value = separators.tier2 | replace({'%': ''}) | number_format(4, '.', '') %}
-                <div class="pb-stage"{% if separators.tier2 | length > 0 %} style="width: {{ 100 - tier2Value }}%;"{% endif %}>
+                <div class="pb-stage"{% if separators.tier2 | length > 0 %} style="width: {{ tier2Value - tier1Value }}%;"{% endif %}>
                     {% for variation in tierList[1].variations %}
                         {{ block('StageImage') }}
                     {% endfor %}
