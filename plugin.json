@@ -9,8 +9,8 @@
     ],
     "namespace": "CheckoutGoodie",
     "type": "template",
-    "version": "1.0.6",
-    "price": 333.20,
+    "version": "1.1.0",
+    "price": 159.10,
     "description": "plentymarkets plugin to show goodie in frontend",
     "shortDescription": {
         "de": "Mit Gratiszugaben höhere Umsätze generieren und diese im plentyShop sichtbar machen",
@@ -25,6 +25,12 @@
     "isClosedSource": true,
     "serviceProvider": "CheckoutGoodie\\Providers\\CheckoutGoodieServiceProvider",
     "dataProviders": [
+        {
+            "key": "CheckoutGoodie\\Containers\\CheckoutGoodieStyleContainer",
+            "name": "Checkout Goodie CSS",
+            "description": "",
+            "defaultLayoutContainer": "Ceres::Template.Style"
+        },
         {
             "key": "CheckoutGoodie\\Containers\\CheckoutGoodieBasketListContainer",
             "name": "Display Goodie after Basket List",

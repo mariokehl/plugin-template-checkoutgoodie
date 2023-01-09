@@ -22,9 +22,16 @@ function CheckoutGoodie(itemSum) {
         const config = this.getConfig();
         return config.messages.goal;
     },
-    this.getMissingMessage = function (amount) {
+    this.getNextGoal = function () {
         const config = this.getConfig();
-        let msg = config.messages.missing;
+        if (config.thresholds.length === 0) return this.getGrossValue();
+        if (config.thresholds[0] && this.getItemSum() < config.thresholds[0]) return config.thresholds[0];
+        if (config.thresholds[1] && this.getItemSum() < config.thresholds[1]) return config.thresholds[1];
+        return this.getGrossValue();
+    },
+    this.getMissingMessage = function (amount, interim) {
+        const config = this.getConfig();
+        let msg = interim ? config.messages.interim : config.messages.missing;
         msg = msg.replace(':amount', Intl.NumberFormat('de-DE', { maximumFractionDigits: 2, minimumFractionDigits: 2 }).format(amount));
         msg = msg.replace(':currency', config.currency);
         return msg;
@@ -35,19 +42,37 @@ function CheckoutGoodie(itemSum) {
         pr = (pr > 100) ? 100 : pr;
         return pr;
     },
-    this.calc = function () {
+    this.calc = function (el) {
         let output;
 
-        const amount = (this.getGrossValue() - this.getItemSum());
+        const amount = (this.getNextGoal() - this.getItemSum());
         if (amount <= 0) {
             output = this.getGoalReachedMessage();
         } else {
-            output = this.getMissingMessage(amount);
+            if (this.getNextGoal() !== this.getGrossValue()) {
+                output = this.getMissingMessage(amount, true);
+            } else {
+                output = this.getMissingMessage(amount);
+            }
         }
         const pr = this.getPercentage();
-        const progress = document.querySelectorAll('[role="progressbar"]')[0];
-        progress.setAttribute('aria-valuenow', pr);
-        progress.style['width'] = pr + '%';
+        const pb = document.querySelectorAll('[role="progressbar"]')[0];
+        pb.setAttribute('aria-valuenow', pr);
+        pb.style['width'] = pr + '%';
+
+        // Toggle classes
+        const config = this.getConfig();
+        if (amount <= 0) {
+            el.classList.remove(config.classes.missingAmount);
+            el.classList.add(config.classes.reachedAmount);
+            pb.classList.remove(config.classes.missingAmount);
+            pb.classList.add(config.classes.reachedAmount);
+        } else {
+            el.classList.remove(config.classes.reachedAmount);
+            el.classList.add(config.classes.missingAmount);
+            pb.classList.remove(config.classes.reachedAmount);
+            pb.classList.add(config.classes.missingAmount);
+        }
 
         return output;
     },
@@ -67,9 +92,24 @@ function CheckoutGoodie(itemSum) {
         } else {
             const self = this;
             Array.prototype.forEach.call(els, function (el) {
-                el.innerHTML = self.calc();
+                el.style.display = 'none';
+                el.innerHTML = self.calc(el);
+                el.style.display = 'block';
             });
         }
+    },
+    this.toggle = function (shippingCountryId) {
+        const config = this.getConfig();
+        const excludedShippingCountries = config.excludedShippingCountries;
+        let display;
+        if (excludedShippingCountries.includes(shippingCountryId)) {
+            display = 'none';
+        } else {
+            display = 'block';
+        }
+        Array.prototype.forEach.call(document.querySelectorAll('.checkout-goodie-container'), function (el) {
+            el.style.display = display;
+        });
     }
 }
 
@@ -100,6 +140,13 @@ document.addEventListener('afterBasketChanged', (e) => {
     const goodie = new CheckoutGoodie(itemSum);
     goodie.setLabel();
 }, false);
+
+// After changing the shipping country in the checkout
+document.addEventListener('afterShippingCountryChanged', (e) => {
+    const shippingCountryId = e.detail;
+    const goodie = new CheckoutGoodie(null);
+    goodie.toggle(shippingCountryId);
+});
 
 
 /**

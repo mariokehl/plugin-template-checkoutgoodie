@@ -2,7 +2,9 @@
 
 namespace CheckoutGoodie\Containers;
 
+use CheckoutGoodie\Helpers\GoodieHelper;
 use CheckoutGoodie\Helpers\SubscriptionInfoHelper;
+use CheckoutGoodie\Helpers\TierListHelper;
 use Plenty\Modules\Basket\Contracts\BasketRepositoryContract;
 use Plenty\Modules\Basket\Models\Basket;
 use Plenty\Plugin\ConfigRepository;
@@ -20,6 +22,7 @@ class CheckoutGoodieProgressBarContainer
     /**
      * The constants
      */
+    const MESSAGE_TEMPLATE_INTERIM = 'interim';
     const MESSAGE_TEMPLATE_MISSING = 'missing';
     const MESSAGE_TEMPLATE_GOAL = 'goal';
 
@@ -29,6 +32,7 @@ class CheckoutGoodieProgressBarContainer
      * @var array
      */
     private $messageTemplates = [
+        self::MESSAGE_TEMPLATE_INTERIM => '',
         self::MESSAGE_TEMPLATE_MISSING => '',
         self::MESSAGE_TEMPLATE_GOAL => ''
     ];
@@ -44,20 +48,18 @@ class CheckoutGoodieProgressBarContainer
      */
     public function call(Twig $twig): string
     {
+        /** @var GoodieHelper $goodieHelper */
+        $goodieHelper = pluginApp(GoodieHelper::class);
+        if (!$goodieHelper->shouldRender()) return '';
+
         /** @var ConfigRepository $configRepo */
         $configRepo = pluginApp(ConfigRepository::class);
 
-        // Is output active in plugin config?
-        $shouldRender = $configRepo->get('CheckoutGoodie.global.active', 'true');
-
-        /** @var SubscriptionInfoHelper $subscription */
-        $subscription = pluginApp(SubscriptionInfoHelper::class);
-        if (!$subscription->isPaid() || $shouldRender === 'false') {
-            return '';
-        }
-
-        // The amount to reach
-        $minimumGrossValue = $configRepo->get('CheckoutGoodie.global.grossValue', 50);
+        // The amounts to reach
+        $minValue = floatval($configRepo->get('CheckoutGoodie.global.grossValue', 50));
+        $tier1GrossValue = floatval($configRepo->get('CheckoutGoodie.global.tier1.grossValue', 0));
+        $tier2GrossValue = floatval($configRepo->get('CheckoutGoodie.global.tier2.grossValue', 0));
+        $maxValue = max([$minValue, $tier1GrossValue, $tier2GrossValue]);
 
         // Current goal amount
         $currAmount = 0;
@@ -73,9 +75,9 @@ class CheckoutGoodieProgressBarContainer
         $actualItemSum = $basket->itemSum ? ($basket->itemSum + $basket->couponDiscount) : 0;
 
         if ($basket && $basket instanceof Basket) {
-            $currAmount = ($minimumGrossValue - $actualItemSum);
+            $currAmount = ($maxValue - $actualItemSum);
             $this->getLogger(__METHOD__)->debug('CheckoutGoodie::Debug.Basket', ['basket' => $basket]);
-            $percentage = ($actualItemSum / $minimumGrossValue) * 100;
+            $percentage = ($actualItemSum / $maxValue) * 100;
             $this->getLogger(__METHOD__)->debug('CheckoutGoodie::Debug.Percentage', ['percentage' => $percentage]);
             $percentage = floor($percentage);
             $this->getLogger(__METHOD__)->debug('CheckoutGoodie::Debug.Percentage', ['percentage' => $percentage]);
@@ -86,26 +88,50 @@ class CheckoutGoodieProgressBarContainer
         // The currency
         $currency = $basket->currency ?? 'EUR';
 
+        // Separators
+        $thresholds = [];
+        $tier1Separator = $tier1GrossValue ? ($minValue * 100) / $maxValue : false;
+        if ($tier1Separator) $thresholds[] = $minValue;
+        $tier2Separator = $tier2GrossValue ? ($tier1GrossValue * 100) / $maxValue : false;
+        if ($tier2Separator) $thresholds[] = $tier1GrossValue;
+
         // The messages
         $messages = $this->getMessageTemplates();
         $this->getLogger(__METHOD__)->debug('CheckoutGoodie::Debug.MsgTemplates', ['messages' => $messages]);
         $label = '';
         if ($percentage < 100) {
-            $label = $this->getMessageTemplates(number_format($currAmount, 2, ',', ''), $currency)[self::MESSAGE_TEMPLATE_MISSING];
+            if ($tier2Separator) {
+                $label = $this->getMessageTemplates(number_format($thresholds[1] - $actualItemSum, 2, ',', ''), $currency)[self::MESSAGE_TEMPLATE_INTERIM];
+            } elseif ($tier1Separator) {
+                $label = $this->getMessageTemplates(number_format($thresholds[0] - $actualItemSum, 2, ',', ''), $currency)[self::MESSAGE_TEMPLATE_INTERIM];
+            } else {
+                $label = $this->getMessageTemplates(number_format($currAmount, 2, ',', ''), $currency)[self::MESSAGE_TEMPLATE_MISSING];
+            }
             $this->getLogger(__METHOD__)->debug('CheckoutGoodie::Debug.ProgressText', ['label' => $label, 'percentageLower' => true]);
         } else {
             $label = $messages[self::MESSAGE_TEMPLATE_GOAL];
             $this->getLogger(__METHOD__)->debug('CheckoutGoodie::Debug.ProgressText', ['label' => $label]);
         }
 
+        /** @var TierListHelper $tierListHelper */
+        $tierListHelper = pluginApp(TierListHelper::class);
+        $tierList = $tierListHelper->getAll();
+
         return $twig->render('CheckoutGoodie::content.Containers.ProgressBar', [
-            'grossValue' => $minimumGrossValue,
-            'itemSum'    => $actualItemSum,
-            'label'      => $label,
+            'excludedShippingCountries' => $goodieHelper->getExcludedShippingCountries(),
+            'hidden' => $goodieHelper->isExcludedByShippingCountryId(),
+            'tierList' => $tierList,
+            'thresholds' => $thresholds,
+            'grossValue' => $maxValue,
+            'itemSum' => $actualItemSum,
+            'label' => $label,
             'percentage' => $percentage,
-            'width'      => 'width: ' . number_format($percentage, 0, '', '') . '%',
-            //'messages'   => $messages,
-            'currency'   => $currency
+            'width' => 'width: ' . number_format($percentage, 0, '', '') . '%',
+            'separators' => [
+                'tier1' => $tier1Separator ? number_format($tier1Separator, 4, '.', '') . '%' : '',
+                'tier2' => $tier2Separator ? number_format($tier2Separator, 4, '.', '') . '%' : '',
+            ],
+            'currency' => $currency
         ]);
     }
 
@@ -116,27 +142,17 @@ class CheckoutGoodieProgressBarContainer
      */
     private function getMessageTemplates(string $amount = '', string $currency = ''): array
     {
+        /** @var Translator $translator */
+        $translator = pluginApp(Translator::class);
+
         // Initialize the custom templates
-        $this->messageTemplates[self::MESSAGE_TEMPLATE_MISSING] = '';
-        $this->messageTemplates[self::MESSAGE_TEMPLATE_GOAL] = '';
-
-        // Default templates as fallback
-        $hasNoIndividualMessageMissing = !strlen($this->messageTemplates[self::MESSAGE_TEMPLATE_MISSING]);
-        $hasNoIndividualMessageGoal = !strlen($this->messageTemplates[self::MESSAGE_TEMPLATE_GOAL]);
-
-        if ($hasNoIndividualMessageMissing || $hasNoIndividualMessageGoal) {
-            /** @var Translator $translator */
-            $translator = pluginApp(Translator::class);
-            if ($hasNoIndividualMessageMissing) {
-                $this->messageTemplates[self::MESSAGE_TEMPLATE_MISSING] = $translator->trans('CheckoutGoodie::Template.MessageMissing');
-            }
-            if ($hasNoIndividualMessageGoal) {
-                $this->messageTemplates[self::MESSAGE_TEMPLATE_GOAL] = $translator->trans('CheckoutGoodie::Template.MessageGoal');
-            }
-        }
+        $this->messageTemplates[self::MESSAGE_TEMPLATE_INTERIM] = $translator->trans('CheckoutGoodie::Template.MessageInterim');
+        $this->messageTemplates[self::MESSAGE_TEMPLATE_MISSING] = $translator->trans('CheckoutGoodie::Template.MessageMissing');
+        $this->messageTemplates[self::MESSAGE_TEMPLATE_GOAL] = $translator->trans('CheckoutGoodie::Template.MessageGoal');
 
         // Replace markers
         if (strlen($amount) && strlen($currency)) {
+            $this->messageTemplates[self::MESSAGE_TEMPLATE_INTERIM] = str_replace([':amount', ':currency'], [$amount, $currency], $this->messageTemplates[self::MESSAGE_TEMPLATE_INTERIM]);
             $this->messageTemplates[self::MESSAGE_TEMPLATE_MISSING] = str_replace([':amount', ':currency'], [$amount, $currency], $this->messageTemplates[self::MESSAGE_TEMPLATE_MISSING]);
         }
 

@@ -1,5 +1,13 @@
 # Versionshinweise für "Gratiszugabe im Warenkorb anzeigen"
 
+## v1.1.0 (09.01.2023)
+
+### Hinzugefügt
+- Es kann eine Staffelung von mehreren Gratiszugaben erfolgen, z.B. 50 Euro = Produkt A, 100 Euro = Produkt A + Produkt B, ... Du kannst bis zu 3 Staffeln verwenden
+- Du hast nun die Möglichkeit über die Plugin-Konfiguration einzelne Lieferländer vom kostenlosen Versand auszuschließen und die Fortschrittsanzeige somit zu verbergen
+- Das Aussehen der Fortschrittsanzeige erlaubt ab sofort vielfältige Individualisierungen: CSS-Klasse(n) für Fehlbetrag und Erfolg (legt die Hintergrundfarbe der Texte und der Fortschrittsanzeige fest), ggf. gestreifte Fortschrittsanzeige, Vorschaubilder + Tooltip der Gratiszugaben
+- Unterhalb der Fortschrittsanzeige wurde ein Text-Platzhalter für einen Link oder Erklärung eingebaut
+
 ## v1.0.6 (17.11.2022)
 
 ### Geändert

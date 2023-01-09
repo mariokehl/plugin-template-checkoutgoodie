@@ -2,10 +2,8 @@
 
 namespace CheckoutGoodie\Containers;
 
-use CheckoutGoodie\Helpers\SubscriptionInfoHelper;
-use Plenty\Modules\Item\Variation\Contracts\VariationRepositoryContract;
-use Plenty\Modules\Item\Variation\Models\Variation;
-use Plenty\Plugin\ConfigRepository;
+use CheckoutGoodie\Helpers\GoodieHelper;
+use CheckoutGoodie\Helpers\TierListHelper;
 use Plenty\Plugin\Log\Loggable;
 use Plenty\Plugin\Templates\Twig;
 
@@ -27,48 +25,17 @@ class CheckoutGoodieBasketListContainer
      */
     public function call(Twig $twig): string
     {
-        /** @var ConfigRepository $configRepo */
-        $configRepo = pluginApp(ConfigRepository::class);
+        /** @var GoodieHelper $goodieHelper */
+        $goodieHelper = pluginApp(GoodieHelper::class);
+        if (!$goodieHelper->shouldRender()) return '';
 
-        // Is output active in plugin config?
-        $shouldRender = $configRepo->get('CheckoutGoodie.global.active', 'true');
-
-        /** @var SubscriptionInfoHelper $subscription */
-        $subscription = pluginApp(SubscriptionInfoHelper::class);
-        if (!$subscription->isPaid() || $shouldRender === 'false') {
-            return '';
-        }
-
-        /** @var VariationRepositoryContract $variationRepo */
-        $variationRepo = pluginApp(VariationRepositoryContract::class);
-
-        /** @var Variation $variation */
-        $variation = $variationRepo->findById($configRepo->get('CheckoutGoodie.global.variantId'));
-        $this->getLogger(__METHOD__)->debug('CheckoutGoodie::Debug.Variation', ['variation' => $variation]);
-
-        // The amount to reach
-        $minimumGrossValue = $configRepo->get('CheckoutGoodie.global.grossValue', 50);
+        /** @var TierListHelper $tierListHelper */
+        $tierListHelper = pluginApp(TierListHelper::class);
+        $tierList = $tierListHelper->getAll();
 
         return $twig->render('CheckoutGoodie::content.Components.MyBasketList', [
-            'variationName'  => $variation->name,
-            'variationImage' => $this->getPreviewImageUrl($variation),
-            'grossValue'     => $minimumGrossValue
+            'hidden' => $goodieHelper->isExcludedByShippingCountryId(),
+            'tierList' => $tierList
         ]);
-    }
-
-    /**
-     * @param Variation $variation
-     * @return string
-     */
-    private function getPreviewImageUrl(Variation $variation): string
-    {
-        $images = $variation->images;
-        if (count($images) === 0) {
-            return 'https://dummyimage.com/150x150/000/fff';
-        }
-        if (count($images) === 1) {
-            return $images[0]['urlPreview'];
-        }
-        return '';
     }
 }

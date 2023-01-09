@@ -22,38 +22,29 @@
                 </template>
             </transition-group>
             <!-- START: CheckoutGoodie Plugin -->
-            <div v-if="($store.state.basket.data.itemSum + ($store.state.basket.data.couponCampaignType === 'promotion' ? $store.state.basket.data.couponDiscount : 0)) >= {{ grossValue }}">
-                <hr class="m-0">
-                <div id="checkout-goodie" class="basket-list-item py-3">
-                    <div class="basket-item component-loading with-icon d-flex">
-                        <div class="image-container">
-                            <img src="{{ variationImage }}" alt="{{ variationName }}" title="{{ variationName }}" class="d-block mw-100 mh-100">
-                        </div>
-                        <div class="meta-container-wrapper">
-                            <div class="meta-container-wrapper-inner">
-                                <div class="meta-container">
-                                    <div class="position-relative w-100">
-                                        <a href="javascript:;" class="item-name text-primary text-appearance small font-weight-bold text-break">{{ variationName }}</a>
-                                    </div>
-                                </div>
-                                <div class="basket-item-container-right">
-                                    <div class="qty-box-container">
-                                        <div class="qty-box d-flex h-100">
-                                            <input type="text" value="1" aria-label="Mengeneingabe" class="qty-input text-center" disabled="disabled">
-                                            <div class="qty-btn-container d-flex flex-column">
-                                                <button data-toggle="tooltip" data-placement="top" data-testing="quantity-btn-increase" title="" aria-label="Menge erhöhen" class="btn qty-btn flex-fill d-flex justify-content-center p-0" data-original-title="Maximale Bestellmenge: " disabled="disabled"><i aria-hidden="true" class="fa fa-plus default-float"></i></button>
-                                                <button data-toggle="tooltip" data-placement="bottom" data-testing="quantity-btn-decrease" title="" aria-label="Menge verringern" class="btn qty-btn flex-fill d-flex justify-content-center p-0" data-original-title="Minimale Bestellmenge: 1" disabled="disabled"><i aria-hidden="true" class="fa fa-minus default-float"></i></button>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="price-box text-right ml-2 mt-1">
-                                        <span class="badge bg-success">{{ trans("CheckoutGoodie::Template.BadgeFree") }}</span>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
+            <div class="checkout-goodie-container"{% if hidden %} style="display: none;"{% endif %}>
+            {% if tierList[2].grossValue and tierList[1].grossValue %}
+                <div v-if="($store.state.basket.data.itemSum + ($store.state.basket.data.couponCampaignType === 'promotion' ? $store.state.basket.data.couponDiscount : 0)) >= {{ tierList[2].grossValue }}">
+                    {% include "CheckoutGoodie::content.Components.Partials.GoodieItem" with { 'variations': tierList[2].variations } %}
                 </div>
+                <div v-else-if="($store.state.basket.data.itemSum + ($store.state.basket.data.couponCampaignType === 'promotion' ? $store.state.basket.data.couponDiscount : 0)) >= {{ tierList[1].grossValue }}">
+                    {% include "CheckoutGoodie::content.Components.Partials.GoodieItem" with { 'variations': tierList[1].variations } %}
+                </div>
+                <div v-else-if="($store.state.basket.data.itemSum + ($store.state.basket.data.couponCampaignType === 'promotion' ? $store.state.basket.data.couponDiscount : 0)) >= {{ tierList[0].grossValue }}">
+                    {% include "CheckoutGoodie::content.Components.Partials.GoodieItem" with { 'variations': tierList[0].variations } %}
+                </div>
+            {% elseif not tierList[2].grossValue and tierList[1].grossValue %}
+                <div v-if="($store.state.basket.data.itemSum + ($store.state.basket.data.couponCampaignType === 'promotion' ? $store.state.basket.data.couponDiscount : 0)) >= {{ tierList[1].grossValue }}">
+                    {% include "CheckoutGoodie::content.Components.Partials.GoodieItem" with { 'variations': tierList[1].variations } %}
+                </div>
+                <div v-else-if="($store.state.basket.data.itemSum + ($store.state.basket.data.couponCampaignType === 'promotion' ? $store.state.basket.data.couponDiscount : 0)) >= {{ tierList[0].grossValue }}">
+                    {% include "CheckoutGoodie::content.Components.Partials.GoodieItem" with { 'variations': tierList[0].variations } %}
+                </div>
+            {% else %}
+                <div v-if="($store.state.basket.data.itemSum + ($store.state.basket.data.couponCampaignType === 'promotion' ? $store.state.basket.data.couponDiscount : 0)) >= {{ tierList[0].grossValue }}">
+                    {% include "CheckoutGoodie::content.Components.Partials.GoodieItem" with { 'variations': tierList[0].variations } %}
+                </div>
+            {% endif %}
             </div>
             <!-- END: CheckoutGoodie Plugin -->
         </div>
