@@ -1,5 +1,13 @@
 # Release Notes for "Show free goodie in shopping cart"
 
+## v1.1.0 (2023-01-09)
+
+### Added
+- Multiple free goodies can be scaled, e.g. 50 euros = product A, 100 euros = product A + product B, ... You can use up to 3 tiers
+- You now have the option of excluding individual shipping countries from goodies via the plugin configuration and thus hiding the progress bar
+- The appearance of the progress bar now allows a variety of customizations: CSS class(es) for missing and success (determines the background color of the texts and the progress bar), if necessary striped progress bar, preview images + tool tip of the goodies
+- A text placeholder for a link or explanation has been added below the progress bar
+
 ## v1.0.6 (2022-11-17)
 
 ### Changed
