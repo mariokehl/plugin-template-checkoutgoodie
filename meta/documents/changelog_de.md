@@ -1,5 +1,9 @@
 # Versionshinweise für "Gratiszugabe im Warenkorb anzeigen"
 
+## v1.1.1 (15.02.2023)
+
+TODO
+
 ## v1.1.0 (09.01.2023)
 
 ### Hinzugefügt

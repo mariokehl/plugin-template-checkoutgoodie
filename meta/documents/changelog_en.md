@@ -1,5 +1,9 @@
 # Release Notes for "Show free goodie in shopping cart"
 
+## v1.1.1 (2023-02-15)
+
+TODO
+
 ## v1.1.0 (2023-01-09)
 
 ### Added
