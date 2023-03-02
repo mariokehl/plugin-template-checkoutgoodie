@@ -1,8 +1,9 @@
 # Release Notes for "Show free goodie in shopping cart"
 
-## v1.1.1 (2023-02-15)
+## v1.1.1 (2023-03-02)
 
-TODO
+### Fixed
+- An incorrect query for excluded delivery countries meant that the progress bar was no longer hidden
 
 ## v1.1.0 (2023-01-09)
 
