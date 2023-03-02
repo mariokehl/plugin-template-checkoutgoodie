@@ -143,7 +143,7 @@ document.addEventListener('afterBasketChanged', (e) => {
 
 // After changing the shipping country in the checkout
 document.addEventListener('afterShippingCountryChanged', (e) => {
-    const shippingCountryId = e.detail;
+    const shippingCountryId = parseInt(e.detail);
     const goodie = new CheckoutGoodie(null);
     goodie.toggle(shippingCountryId);
 });
