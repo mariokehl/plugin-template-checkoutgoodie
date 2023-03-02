@@ -1,5 +1,10 @@
 # Versionshinweise für "Gratiszugabe im Warenkorb anzeigen"
 
+## v1.1.1 (02.03.2023)
+
+### Behoben
+- Eine fehlerhafte Abfrage auf ausgenommenene Lieferländer führte dazu, dass die Fortschrittsanzeige nicht mehr ausgeblendet wurde
+
 ## v1.1.0 (09.01.2023)
 
 ### Hinzugefügt
