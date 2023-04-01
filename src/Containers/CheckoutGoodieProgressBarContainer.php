@@ -3,7 +3,6 @@
 namespace CheckoutGoodie\Containers;
 
 use CheckoutGoodie\Helpers\GoodieHelper;
-use CheckoutGoodie\Helpers\SubscriptionInfoHelper;
 use CheckoutGoodie\Helpers\TierListHelper;
 use Plenty\Modules\Basket\Contracts\BasketRepositoryContract;
 use Plenty\Modules\Basket\Models\Basket;
